@@ -14,6 +14,9 @@ class User:
 
     def makeBlogPost(self, title, text): # instance method
         return Blog(title, text, self)
+    
+    def makeComment():
+        pass
 
     def getUsername(self): # instance method
         return self.username
@@ -26,6 +29,7 @@ class Blog:
     text = ""
     madeBy = ""
     publishedAt = 0
+    listOfComments = []
 
     def __init__(self, title, text, user):
         self.title = title
