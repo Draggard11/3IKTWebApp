@@ -1,24 +1,44 @@
 class User:
 
-    id
+    id # class attribute
     username = ""
+    password = ""
 
-    def __init__(self, id, username):
-        self.id = id
+    def __init__ (self):
+        pass
+
+    def __init__(self, id, username, password): # constructor
+        self.id = id # instance attribute
         self.username = username
+        self.password = password
 
-    def getUsername(self):
-        return  self.username
+    def makeBlogPost(self, title, text): # instance method
+        return Blog(title, text, self)
+
+    def getUsername(self): # instance method
+        return self.username
     
     def setUsername(self, username):
         self.username = username
 
 class Blog:
-    
-    def __init__(self):
-        pass
+    title = ""
+    text = ""
+    madeBy = ""
+    publishedAt = 0
+
+    def __init__(self, title, text, user):
+        self.title = title
+        self.text = text
+        self.madeBy = user.username
 
 class Comment:
+    commenter = ""
+    text = ""
+    stars = 0
+    publishedAt = 0
 
-    def __init__(self):
-        pass
+    def __init__(self, commenter, text, stars):
+        self.commenter = commenter
+        self.text = text
+        self.stars = stars
