@@ -1,18 +1,15 @@
 from domain import User, Blog, Comment
 
-def register_user(id, username, password):
+def register_user(id, username, password): # Does when you click register button
+    return User(id, username, password)
+
+def login_user(username, password): # Does when you click login button
     pass
 
-def login_user(username, password):
+def make_blog_post(user, title, text): # Does when you click create blog post button
     pass
 
-def logout_user(user):
-    pass
-
-def make_blog_post(user, title, text):
-    pass
-
-def make_comment(user, blog, text, stars):
+def make_comment(user, blog, text, stars): # Does when you click create comment button
     pass
 
 def main():
@@ -22,7 +19,7 @@ def main():
     user1.setUsername("DragonMaster")
     print(user1.getUsername())
     blog1 = user1.makeBlogPost("My first blog", "This is the content of my first blog post.")
-    print(f"Blog Title: {blog1.title}, Made By: {blog1.madeBy}")
+    print(blog1.__str__())
 
 if __name__ == "__main__":
     main()
