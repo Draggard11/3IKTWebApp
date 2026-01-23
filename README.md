@@ -2,18 +2,18 @@
 
 ## domain model
 Everyone has an ID
-A User
-- username String
-- password String
+A User (class)
+- username String (attribute)
+- password String (attribute)
 
-A Post
+A Post (class)
 - title String
 - text String
 - madeBy String
 - publishedAt Time
 - comments List of Comments
 
-A comment
+A comment (class)
 - commenter String
 - publishedAt Time
 - stars Int
