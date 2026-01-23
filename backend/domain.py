@@ -32,14 +32,27 @@ class User:
     def editBlogPost(self, blog, title, text):
         blog.edit(title, text)
     
-    def makeComment(self, text, stars):
-        pass
+    def makeComment(self, text, stars, blog):
+        comment = Comment(self.username, self.blogs)
+        comment.post(text, stars)
+        self.comment.append(comment)
+        blog.addComment(comment)
+        return comment
 
-    def deleteComment(self, comment):
-        pass
+    def deleteComment(self, comment, blog):
+        if self.username == blog.madeBy:
+            blog.deleteComment(comment)
+        if self.username == comment.commenter:
+            try:
+                comment_index = self.comments.index(blog)
+            except ValueError:
+                return
+            del self.comments[comment_index]
+            blog.deleteComment(comment)
 
     def editComment(self, comment, text, stars):
-        pass
+        if self.username == comment.commenter:
+            comment.edit(text, stars)
 
     def getUsername(self): # instance method
         return self.username
@@ -71,7 +84,7 @@ class Blog:
         self.lastEditedAt = datetime.datetime.now()
         self.listOfComments = comments
     
-    def edit(self, title, text):
+    def Edit(self, title, text):
         self.title = title
         self.text = text
         self.lastEditedAt = datetime.datetime.now()
@@ -84,11 +97,19 @@ class Comment:
     text = ""
     stars = 0
     publishedAt = datetime.datetime.now()
+    blog = ""
+    lastEditedAt = None
 
-    def __init__(self, commenter):
+    def __init__(self, commenter, blog):
         self.commenter = commenter
+        self.blog = blog
     
-    def PostComment(self, text, stars):
+    def post(self, text, stars):
         self.text = text
         self.stars = stars
         self.publishedAt = datetime.datetime.now()
+
+    def edit(self, text, stars):
+        self.text = text
+        self.stars = stars
+        self.lastEditedAt = datetime.datetime.now()
