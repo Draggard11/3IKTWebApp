@@ -7,7 +7,10 @@ def test_user_make_blog_post(): # user functionality
     assert isinstance(Blog, blog)
     assert blog in user.blogs
     assert user.getUsername() == blog.madeBy
-
+def test_user_edit_blog_post(): # user functionality
+    pass 
+def test_user_delete_blog_post(): # user functionality
+    pass
 def test_user_edit_and_delete_blog_post(): # user scenario
     user = User(2, "charlie", "mypassword")
     blog = user.makeBlogPost("Initial Title", "Initial Content")
@@ -16,3 +19,15 @@ def test_user_edit_and_delete_blog_post(): # user scenario
     assert blog.text == "Updated Content"
     user.deleteBlogPost(blog)
     assert blog not in user.blogs
+
+def test_user_make_comment(): # user functionality
+    pass
+
+def test_user_edit_comment(): # user functionality
+    pass
+
+def test_user_delete_comment(): # user functionality
+    pass
+
+def test_user_edit_and_delete_comment(): # user scenario
+    pass
