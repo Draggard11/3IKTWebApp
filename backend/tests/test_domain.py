@@ -6,7 +6,7 @@ def test_user_make_blog_post(): # user functionality
     blog = user.makeBlogPost("muldvarp", "content")
     assert isinstance(blog, Blog)
     assert blog in user.blogs
-    assert user.getUsername() == blog.madeBy
+    assert user == blog.madeBy
 
 def test_user_edit_blog_post(): # user functionality
     user = User(1, "dylan", "823y48723bv7yo4htuhrilhgdhwv4t3")
@@ -56,8 +56,9 @@ def test_user_delete_comment(): # user functionality
     user2 = User(5, "Frank", "IKEA")
     blog = user1.makeBlogPost("How To Install Mitsubishi Kazan Arctic 8000 Heat Pump", "Begin the installation by confirming the site meets all Mitsubishi requirements for clearance structural support electrical capacity and local code compliance. Securely mount the indoor unit on a wall or floor location that allows proper airflow. Place the outdoor unit on a level vibration isolated base with sufficient space for air intake and discharge. Next route the insulated refrigerant piping condensate drain and control wiring between the indoor and outdoor units. Seal all wall penetrations to prevent air and moisture intrusion. Evacuate the refrigerant lines with a vacuum pump to remove air and moisture then release the factory refrigerant charge according to the manufacturer specifications. Complete the installation by connecting the system to a dedicated properly sized power circuit with correct grounding. Perform pressure testing and leak checks restore power and configure controller settings. Commission the system by verifying airflow temperature performance defrost operation and confirming the system starts without errors then document the results and advise the owner on registration and routine maintenance.")
     comment = user2.makeComment('🤬', 1, blog)
-    user2.deleteComment(comment, blog)
     assert comment in user2.comments
+    user2.deleteComment(comment, blog)
+    assert comment not in user2.comments
 
 def test_user_edit_and_delete_comment(): # user scenario
     user1 = User(4, "Obama", "passwrod")
@@ -71,3 +72,32 @@ def test_user_edit_and_delete_comment(): # user scenario
     assert comment.stars == 5
     assert user1.deleteComment(comment, blog)
     assert comment not in user2.comments
+
+def test_user_cannot_edit_others_blog_post(): # user scenario
+    user1 = User(6, "Alice", "alicepass")
+    user2 = User(7, "Bob", "bobpass")
+    blog = user1.makeBlogPost("Alice's Blog", "This is Alice's blog content.")
+    original_title = blog.title
+    original_text = blog.text
+    user2.editBlogPost(blog, "Bob's Edit", "Bob tries to edit Alice's blog.")
+    assert blog.title == original_title
+    assert blog.text == original_text
+
+def test_user_cannot_delete_others_blog_post(): # user scenario
+    user1 = User(6, "Alice", "alicepass")
+    user2 = User(7, "Bob", "bobpass")
+    blog = user1.makeBlogPost("Alice's Blog", "This is Alice's blog content.")
+    assert blog in user1.blogs
+    user2.deleteBlogPost(blog)
+    assert blog in user1.blogs
+
+def test_user_cannot_edit_others_comment(): # user scenario
+    user1 = User(8, "Charlie", "charliepass")
+    user2 = User(9, "Dave", "davepass")
+    blog = user1.makeBlogPost("Charlie's Blog", "This is Charlie's blog content.")
+    comment = user2.makeComment("Nice blog!", 5, blog)
+    original_text = comment.text
+    original_stars = comment.stars
+    user1.editComment(comment, "Edited by Charlie", 1)
+    assert comment.text == original_text
+    assert comment.stars == original_stars

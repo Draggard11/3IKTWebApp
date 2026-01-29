@@ -93,10 +93,10 @@ class User: # Bob
             Comment: The created Comment object
         """
         comment = Comment(self, blog)
-        comment.post(text, stars)
-        self.comments.append(comment)
-        blog.addComment(comment)
-        return comment
+        if comment.post(text, stars):
+            self.comments.append(comment)
+            blog.addComment(comment)
+            return comment
 
     def deleteComment(self, comment: "Comment", blog: "Blog"):
         """Delete a comment if the user is the blog author or comment author.
@@ -116,6 +116,7 @@ class User: # Bob
                 return False
             del self.comments[comment_index]
             blog.deleteComment(comment)
+            del comment
             return True
         return False
 
@@ -128,8 +129,8 @@ class User: # Bob
             stars (int): The new rating
         """
         if self == comment.commenter:
-            comment.edit(text, stars)
-            return True
+            if comment.edit(text, stars):
+                return True
         return False
     
 # region Getter and Setter methods
@@ -204,6 +205,13 @@ class Blog:
         del self.listOfComments[comment_index]
 # endregion
 
+# region Private methods
+    def __checkBlog(self, title: str, text: str) -> bool:
+        if not title or not text:
+            return False
+        return True
+
+# endregion
 # region Overridden methods
     def __eq__(self, other):
         if not isinstance(other, Blog):
@@ -231,15 +239,36 @@ class Comment:
         self.commenter = commenter
         self.blog = blog
 # region Comment methods
-    def post(self, text, stars):
+    def post(self, text: str, stars: int):
+        if not self.__checkComment:
+            return False
         self.text = text
         self.stars = stars
-
         self.publishedAt = datetime.datetime.now()
+        return True
 
-    def edit(self, text, stars):
+    def edit(self, text: str, stars: int):
+        if not self.__checkComment:
+            return False
         self.text = text
         self.stars = stars
         self.lastEditedAt = datetime.datetime.now()
+        return True
+# region private methods
+    def __checkComment(self, text: str, stars: int) -> bool:
+        if not text or not stars:
+            return False
+        if not self.__checkStars(stars):
+            return False
+        if self.__checkText(text):
+            return False
+        return True
+    
+    def __checkStars(self, stars: int) -> bool:
+        return stars in range(0,6)
+    
+    def __checkText(text: str) -> bool:
+        return len(text) == 50
+# endregion
 # endregion
 # endregion
