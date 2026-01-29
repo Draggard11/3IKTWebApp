@@ -93,7 +93,7 @@ class User: # Bob
         """
         comment = Comment(self.username, self.blogs)
         comment.post(text, stars)
-        self.comment.append(comment)
+        self.comments.append(comment)
         blog.addComment(comment)
         return comment
 
@@ -106,13 +106,16 @@ class User: # Bob
         """
         if self.username == blog.madeBy:
             blog.deleteComment(comment)
+            return True
         if self.username == comment.commenter:
             try:
-                comment_index = self.comments.index(blog)
+                comment_index = self.comments.index(comment)
             except ValueError:
-                return
+                return False
             del self.comments[comment_index]
             blog.deleteComment(comment)
+            return True
+        return False
 
     def editComment(self, comment: "Comment", text, stars):
         """Edit a comment if the user is the comment author.
@@ -124,6 +127,8 @@ class User: # Bob
         """
         if self.username == comment.commenter:
             comment.edit(text, stars)
+            return True
+        return False
     
 # region Getter and Setter methods
     def getUsername(self):
@@ -212,7 +217,6 @@ class Blog:
 # endregion
 
 # region Comment class
-
 class Comment:
     commenter = ""
     text = ""
@@ -228,6 +232,7 @@ class Comment:
     def post(self, text, stars):
         self.text = text
         self.stars = stars
+
         self.publishedAt = datetime.datetime.now()
 
     def edit(self, text, stars):
