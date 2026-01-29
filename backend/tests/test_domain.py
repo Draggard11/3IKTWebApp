@@ -8,8 +8,10 @@ def test_user_make_blog_post(): # user functionality
     assert blog in user.blogs
     assert user.getUsername() == blog.madeBy
 def test_user_edit_blog_post(): # user functionality
+    #TODO: implement test
     pass 
 def test_user_delete_blog_post(): # user functionality
+    #TODO: implement test
     pass
 def test_user_edit_and_delete_blog_post(): # user scenario
     user = User(2, "charlie", "mypassword")
@@ -21,13 +23,17 @@ def test_user_edit_and_delete_blog_post(): # user scenario
     assert blog not in user.blogs
 
 def test_user_make_comment(): # user functionality
+    #TODO: implement test
     pass
 
 def test_user_edit_comment(): # user functionality
+    #TODO: implement test
     pass
 
 def test_user_delete_comment(): # user functionality
+    #TODO: implement test
     pass
 
 def test_user_edit_and_delete_comment(): # user scenario
+    #TODO: implement test
     pass
