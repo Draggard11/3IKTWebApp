@@ -4,8 +4,6 @@ import datetime
 class User: # Bob
 
     """
-    Docstring for User
-
     Represents a user in the blogging system with capabilities to create, edit, and delete blog posts and comments.
 
     Attributes:
@@ -28,7 +26,7 @@ class User: # Bob
     comments = []
     blogs = []
 
-    def __init__(self, id: str, username, password):
+    def __init__(self, id: str, username: str, password):
         """Initialize a User with id, username, and password.
         
         Args:
@@ -40,7 +38,7 @@ class User: # Bob
         self.username = username
         self.password = password
 
-    def makeBlogPost(self, title, text):
+    def makeBlogPost(self, title: str, text: str):
         """Create a new blog post with the given title and text.
         
         Args:
@@ -59,7 +57,7 @@ class User: # Bob
         self.blogs.append(blog)
         return blog
     
-    def deleteBlogPost(self, blog):
+    def deleteBlogPost(self, blog: "Blog"):
         """Delete a blog post from the user's blogs.
         
         Args:
@@ -71,7 +69,7 @@ class User: # Bob
             return
         del self.blogs[blog_index]
 
-    def editBlogPost(self, blog, title, text):
+    def editBlogPost(self, blog: "Blog", title: str, text: str):
         """Edit a blog post if the user is the author.
         
         Args:
@@ -81,8 +79,8 @@ class User: # Bob
         """
         if self.username == blog.madeBy:
             blog.edit(title, text)
-    
-    def makeComment(self, text, stars, blog):
+
+    def makeComment(self, text, stars: int, blog: "Blog"):
         """Create a new comment on a blog post.
         
         Args:
@@ -99,7 +97,7 @@ class User: # Bob
         blog.addComment(comment)
         return comment
 
-    def deleteComment(self, comment, blog):
+    def deleteComment(self, comment: "Comment", blog: "Blog"):
         """Delete a comment if the user is the blog author or comment author.
         
         Args:
@@ -116,7 +114,7 @@ class User: # Bob
             del self.comments[comment_index]
             blog.deleteComment(comment)
 
-    def editComment(self, comment, text, stars):
+    def editComment(self, comment: "Comment", text, stars):
         """Edit a comment if the user is the comment author.
         
         Args:
@@ -136,7 +134,7 @@ class User: # Bob
         """
         return self.username
     
-    def setUsername(self, username):
+    def setUsername(self, username: str):
         """Set the user's username.
         
         Args:
