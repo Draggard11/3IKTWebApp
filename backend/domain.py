@@ -66,8 +66,9 @@ class User: # Bob
         try:
             blog_index = self.blogs.index(blog)
         except ValueError:
-            return
+            return False
         del self.blogs[blog_index]
+        return True
 
     def editBlogPost(self, blog: "Blog", title: str, text: str):
         """Edit a blog post if the user is the author.
@@ -77,7 +78,7 @@ class User: # Bob
             title (str): The new title
             text (str): The new content
         """
-        if self.username == blog.madeBy:
+        if self == blog.madeBy:
             blog.edit(title, text)
 
     def makeComment(self, text, stars: int, blog: "Blog"):
@@ -91,7 +92,7 @@ class User: # Bob
         Returns:
             Comment: The created Comment object
         """
-        comment = Comment(self.username, self.blogs)
+        comment = Comment(self, blog)
         comment.post(text, stars)
         self.comments.append(comment)
         blog.addComment(comment)
@@ -104,10 +105,11 @@ class User: # Bob
             comment (Comment): The comment to delete
             blog (Blog): The blog containing the comment
         """
-        if self.username == blog.madeBy:
+        if self == blog.madeBy:
             blog.deleteComment(comment)
+            comment.commenter.deleteComment(comment, blog)
             return True
-        if self.username == comment.commenter:
+        if self == comment.commenter:
             try:
                 comment_index = self.comments.index(comment)
             except ValueError:
@@ -117,7 +119,7 @@ class User: # Bob
             return True
         return False
 
-    def editComment(self, comment: "Comment", text, stars):
+    def editComment(self, comment: "Comment", text: str, stars: int):
         """Edit a comment if the user is the comment author.
         
         Args:
@@ -125,7 +127,7 @@ class User: # Bob
             text (str): The new comment text
             stars (int): The new rating
         """
-        if self.username == comment.commenter:
+        if self == comment.commenter:
             comment.edit(text, stars)
             return True
         return False
@@ -169,13 +171,13 @@ class User: # Bob
 class Blog:
     title = ""
     text = ""
-    madeBy = ""
+    madeBy = None
     publishedAt = datetime.datetime.now()
     lastEditedAt = None
     listOfComments = []
 
-    def __init__(self, user):
-        self.madeBy = user.username
+    def __init__(self, user: "User"):
+        self.madeBy = user
 
 # region Blog methods
     def post(self, title, text, comments):
@@ -218,14 +220,14 @@ class Blog:
 
 # region Comment class
 class Comment:
-    commenter = ""
+    commenter = None
     text = ""
     stars = 0
     publishedAt = datetime.datetime.now()
-    blog = ""
+    blog = None
     lastEditedAt = None
 
-    def __init__(self, commenter, blog):
+    def __init__(self, commenter: "User", blog: "Blog"):
         self.commenter = commenter
         self.blog = blog
 # region Comment methods
