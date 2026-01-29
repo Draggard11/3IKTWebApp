@@ -36,26 +36,38 @@ def test_user_make_comment(): # user functionality
     user1 = User(4, "Obama", "passwrod")
     user2 = User(5, "Frank", "IKEA")
     blog = user1.makeBlogPost("How To Install Mitsubishi Kazan Arctic 8000 Heat Pump", "Begin the installation by confirming the site meets all Mitsubishi requirements for clearance structural support electrical capacity and local code compliance. Securely mount the indoor unit on a wall or floor location that allows proper airflow. Place the outdoor unit on a level vibration isolated base with sufficient space for air intake and discharge. Next route the insulated refrigerant piping condensate drain and control wiring between the indoor and outdoor units. Seal all wall penetrations to prevent air and moisture intrusion. Evacuate the refrigerant lines with a vacuum pump to remove air and moisture then release the factory refrigerant charge according to the manufacturer specifications. Complete the installation by connecting the system to a dedicated properly sized power circuit with correct grounding. Perform pressure testing and leak checks restore power and configure controller settings. Commission the system by verifying airflow temperature performance defrost operation and confirming the system starts without errors then document the results and advise the owner on registration and routine maintenance.")
-    assert user2.makeComment('🤬', 1, blog)
+    comment = user2.makeComment('🤬', 1, blog)
+    assert isinstance(comment, Comment)
+    assert comment in user2.comments
 
 def test_user_edit_comment(): # user functionality
     user1 = User(4, "Obama", "passwrod")
     user2 = User(5, "Frank", "IKEA")
     blog = user1.makeBlogPost("How To Install Mitsubishi Kazan Arctic 8000 Heat Pump", "Begin the installation by confirming the site meets all Mitsubishi requirements for clearance structural support electrical capacity and local code compliance. Securely mount the indoor unit on a wall or floor location that allows proper airflow. Place the outdoor unit on a level vibration isolated base with sufficient space for air intake and discharge. Next route the insulated refrigerant piping condensate drain and control wiring between the indoor and outdoor units. Seal all wall penetrations to prevent air and moisture intrusion. Evacuate the refrigerant lines with a vacuum pump to remove air and moisture then release the factory refrigerant charge according to the manufacturer specifications. Complete the installation by connecting the system to a dedicated properly sized power circuit with correct grounding. Perform pressure testing and leak checks restore power and configure controller settings. Commission the system by verifying airflow temperature performance defrost operation and confirming the system starts without errors then document the results and advise the owner on registration and routine maintenance.")
     comment = user2.makeComment('🤬', 1, blog)
-    assert user2.editComment(comment, '😄', 5)
+    assert comment.text == '🤬'
+    assert comment.stars == 1
+    user2.editComment(comment, '😄', 5)
+    assert comment.text == '😄'
+    assert comment.stars == 5
 
 def test_user_delete_comment(): # user functionality
     user1 = User(4, "Obama", "passwrod")
     user2 = User(5, "Frank", "IKEA")
     blog = user1.makeBlogPost("How To Install Mitsubishi Kazan Arctic 8000 Heat Pump", "Begin the installation by confirming the site meets all Mitsubishi requirements for clearance structural support electrical capacity and local code compliance. Securely mount the indoor unit on a wall or floor location that allows proper airflow. Place the outdoor unit on a level vibration isolated base with sufficient space for air intake and discharge. Next route the insulated refrigerant piping condensate drain and control wiring between the indoor and outdoor units. Seal all wall penetrations to prevent air and moisture intrusion. Evacuate the refrigerant lines with a vacuum pump to remove air and moisture then release the factory refrigerant charge according to the manufacturer specifications. Complete the installation by connecting the system to a dedicated properly sized power circuit with correct grounding. Perform pressure testing and leak checks restore power and configure controller settings. Commission the system by verifying airflow temperature performance defrost operation and confirming the system starts without errors then document the results and advise the owner on registration and routine maintenance.")
     comment = user2.makeComment('🤬', 1, blog)
-    assert user2.deleteComment(comment, blog)
+    user2.deleteComment(comment, blog)
+    assert comment in user2.comments
 
 def test_user_edit_and_delete_comment(): # user scenario
     user1 = User(4, "Obama", "passwrod")
     user2 = User(5, "Frank", "IKEA")
     blog = user1.makeBlogPost("How To Install Mitsubishi Kazan Arctic 8000 Heat Pump", "Begin the installation by confirming the site meets all Mitsubishi requirements for clearance structural support electrical capacity and local code compliance. Securely mount the indoor unit on a wall or floor location that allows proper airflow. Place the outdoor unit on a level vibration isolated base with sufficient space for air intake and discharge. Next route the insulated refrigerant piping condensate drain and control wiring between the indoor and outdoor units. Seal all wall penetrations to prevent air and moisture intrusion. Evacuate the refrigerant lines with a vacuum pump to remove air and moisture then release the factory refrigerant charge according to the manufacturer specifications. Complete the installation by connecting the system to a dedicated properly sized power circuit with correct grounding. Perform pressure testing and leak checks restore power and configure controller settings. Commission the system by verifying airflow temperature performance defrost operation and confirming the system starts without errors then document the results and advise the owner on registration and routine maintenance.")
     comment = user2.makeComment('🤬', 1, blog)
-    assert user2.editComment(comment, '😄', 5)
-    assert user2.deleteComment(comment, blog)
+    assert comment.text == '🤬'
+    assert comment.stars == 1
+    user2.editComment(comment, '😄', 5)
+    assert comment.text == '😄'
+    assert comment.stars == 5
+    assert user1.deleteComment(comment, blog)
+    assert comment not in user2.comments
