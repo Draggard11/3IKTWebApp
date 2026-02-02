@@ -5,18 +5,23 @@ Everyone has an ID
 A User (class)
 - username String (attribute)
 - password String (attribute)
+- Blogs List
+- Comments List
 
-A Post (class)
+A blog (class)
 - title String
 - text String
-- madeBy String
+- madeBy User.class
 - publishedAt Time
+- lastEditedAt Time
 - comments List of Comments
 
 A comment (class)
-- commenter String
+- commenter User.class
 - publishedAt Time
 - stars Int
 - text String
+- blog Blog.class
+- lastEditedAt Time
 
 ### Made by Gard, Leander, Samuel
