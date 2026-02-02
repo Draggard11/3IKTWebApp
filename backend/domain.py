@@ -2,7 +2,6 @@ import datetime
 # region User class
 
 class User: # Bob
-
     """
     Represents a user in the blogging system with capabilities to create, edit, and delete blog posts and comments.
 
@@ -240,7 +239,7 @@ class Comment:
         self.blog = blog
 # region Comment methods
     def post(self, text: str, stars: int):
-        if not self.__checkComment:
+        if not self.__checkComment(text, stars):
             return False
         self.text = text
         self.stars = stars
@@ -248,7 +247,7 @@ class Comment:
         return True
 
     def edit(self, text: str, stars: int):
-        if not self.__checkComment:
+        if not self.__checkComment(text, stars):
             return False
         self.text = text
         self.stars = stars
@@ -260,15 +259,16 @@ class Comment:
             return False
         if not self.__checkStars(stars):
             return False
-        if self.__checkText(text):
-            return False
+        if self.__checkText(text) is False: return False
         return True
     
     def __checkStars(self, stars: int) -> bool:
-        return stars in range(0,6)
+        result = stars in range(0,6)
+        return result
     
-    def __checkText(text: str) -> bool:
-        return len(text) == 50
+    def __checkText(self, text: str) -> bool:
+        result = len(text) <= 50
+        return result
 # endregion
 # endregion
 # endregion
