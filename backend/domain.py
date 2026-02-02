@@ -172,6 +172,7 @@ class User: # Bob
 
 # region Blog class
 class Blog:
+
     title = ""
     text = ""
     madeBy = None
@@ -230,6 +231,21 @@ class Blog:
 
 # region Comment class
 class Comment:
+
+    """
+    Represents a comment in the blogging system with capabilities to add and edit comments.
+    
+    Attributes:
+        commenter (user): User that posts the comment
+        text (str): The comment
+        stars (int): The rating the commenter gives the blog between 0-5
+        publishedAt (datetime): The date the comment was made
+        blog (Blog): The blog where the comments are on
+    Methods:
+        post(commenter, blog): Post a comment
+        edit(text, stars): Edit a comment
+    """
+
     commenter = None
     text = ""
     stars = 0
@@ -242,6 +258,13 @@ class Comment:
         self.blog = blog
 # region Comment methods
     def post(self, text: str, stars: int):
+        """Create a new comment on a blog post.
+        
+        Args:
+            text (str): The comment text
+            stars (int): A rating in stars
+            publishedAt (datetime): The datetime the post gets published
+        """
         if not self.__checkComment(text, stars):
             return False
         self.text = text
@@ -250,6 +273,13 @@ class Comment:
         return True
 
     def edit(self, text: str, stars: int):
+        """Edits a comment on a blog post.
+        
+        Args:
+            text (str): The comment text
+            stars (int): A rating in stars
+            lastEditedAt (datetime): The datetime the post was last edited
+        """
         if not self.__checkComment(text, stars):
             return False
         self.text = text
