@@ -62,6 +62,9 @@ class User: # Bob
         Args:
             blog (Blog): The blog post to delete
         """
+        if self != blog.madeBy:
+            return False
+
         try:
             blog_index = self.blogs.index(blog)
         except ValueError:
