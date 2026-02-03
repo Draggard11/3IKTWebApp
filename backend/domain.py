@@ -169,6 +169,23 @@ class User: # Bob
 
 # region Blog class
 class Blog:
+    """
+    Represents a blog post in the blogging system with capabilities to post and edit blog posts, and manage its comments.
+
+    Attributes:
+        title (str): The title of the blog post
+        text (str): The content of the blog post
+        madeBy (User): The user who created the blog post
+        publishedAt (datetime): The date and time the blog post was published
+        LastEditedAt (datetime): The date and time the blog post was last edited
+        listOfComments (list): List of comments on the blog post
+
+    Methods:
+        post(title, text, comments): Create a new blog post
+        edit(Title, text): Edit the blog post
+        addComment(comment): Add a comment to the blog post
+        deleteComment(comment): Delete a comment from the blog post
+    """
     title = ""
     text = ""
     madeBy = None
@@ -185,6 +202,11 @@ class Blog:
         self.text = text
         self.publishedAt = datetime.datetime.now()
         self.listOfComments = comments
+    """
+    Post a new blog with the given title, text, and comments.
+
+    Args:
+    """
     
     def edit(self, title, text):
         self.title = title
