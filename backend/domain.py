@@ -262,7 +262,7 @@ class Comment:
         
         Args:
             text (str): The comment text
-            stars (int): A rating in stars
+            stars (int): A rating in stars between 0-5
             publishedAt (datetime): The datetime the post gets published
         """
         if not self.__checkComment(text, stars):
