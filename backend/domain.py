@@ -39,8 +39,10 @@ class User(db.Model): # Bob
     id: Mapped[int] = mapped_column(primary_key=True) # class attribute
     username = Mapped[str] = mapped_column(unique=True)
     password = ""
-    comments: Mapped[List["Comment"]] 
-    blogs = Mapped[List["Blog"]]
+    comments: Mapped[List["Comment"]] = relationship(back_populates="user")
+    comment_id: Mapped[int] = mapped_column(ForeignKey("comment.id"))
+    blogs = Mapped[List["Blog"]] = relationship(back_populates="user")
+    blog_id: Mapped[int] = mapped_column(ForeignKey("blog.id"))
 
     def __init__(self, id: str, username: str, password):
         """Initialize a User with id, username, and password.
@@ -195,10 +197,10 @@ class Blog(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str]
     text: Mapped[str]
-    madeBy: Mapped[List["User"]]
+    madeBy: Mapped["User"] = relationship(back_populates="blogs")
     publishedAt: Mapped[Date]
     lastEditedAt: Mapped[Date]
-    listOfComments: Mapped[List["Blog"]]
+    listOfComments: Mapped[List["Comment"]] = relationship(back_populates="blog")
 
     def __init__(self, user: "User"):
         self.madeBy = user
@@ -268,12 +270,12 @@ class Comment(db.Model):
     __tablename__ = "comment"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    commenter: Mapped["User"]
+    commenter: Mapped["User"] = relationship(back_populates="comments")
     text: Mapped[str]
     stars: Mapped[int] = mapped_column(Integer(5))
     publishedAt: Mapped[Date]
-    blog: Mapped[List["Blog"]]
-    lastEditedAt: Mapped[Date]
+    blog: Mapped[Optional[List["Blog"]]] = relationship(back_populates="commment")
+    lastEditedAt: Mapped[Optional[Date]]
 
     def __init__(self, commenter: "User", blog: "Blog"):
         self.commenter = commenter
