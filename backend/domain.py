@@ -40,9 +40,7 @@ class User(db.Model): # Bob
     username = Mapped[str] = mapped_column(unique=True)
     password = ""
     comments: Mapped[List["Comment"]] = relationship(back_populates="user")
-    comment_id: Mapped[int] = mapped_column(ForeignKey("comment.id"))
     blogs = Mapped[List["Blog"]] = relationship(back_populates="user")
-    blog_id: Mapped[int] = mapped_column(ForeignKey("blog.id"))
 
     def __init__(self, id: str, username: str, password):
         """Initialize a User with id, username, and password.
