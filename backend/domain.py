@@ -1,7 +1,22 @@
 import datetime
+from typing import List
+from typing import Optional
+from sqlalchemy import ForeignKey
+from sqlalchemy import String, Integer, Boolean, Date, Uuid
+from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.orm import Mapped, mapped_column
+
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import relationship
+
+class Base(DeclarativeBase):
+    pass
+
+db = SQLAlchemy(model_class=Base)
+
 # region User class
 
-class User: # Bob
+class User(db.Model): # Bob
     """
     Represents a user in the blogging system with capabilities to create, edit, and delete blog posts and comments.
 
@@ -19,11 +34,13 @@ class User: # Bob
         deleteComment(comment, blog): Delete a comment
         editComment(comment, text, stars): Edit a comment
     """
-    id # class attribute
-    username = ""
+    __tablename__ = "user"
+
+    id: Mapped[int] = mapped_column(primary_key=True) # class attribute
+    username = Mapped[str] = mapped_column(unique=True)
     password = ""
-    comments = []
-    blogs = []
+    comments: Mapped[List["Comment"]] = relationship(back_populates="user")
+    blogs = Mapped[List["Blog"]] = relationship(back_populates="user")
 
     def __init__(self, id: str, username: str, password):
         """Initialize a User with id, username, and password.
@@ -171,7 +188,7 @@ class User: # Bob
 # endregion
 
 # region Blog class
-class Blog:
+class Blog(db.Model):
     """
     Represents a blog post in the blogging system with capabilities to post and edit blog posts, and manage its comments.
 
@@ -189,12 +206,15 @@ class Blog:
         addComment(comment): Add a comment to the blog post
         deleteComment(comment): Delete a comment from the blog post
     """
-    title = ""
-    text = ""
-    madeBy = None
-    publishedAt = datetime.datetime.now()
-    lastEditedAt = None
-    listOfComments = []
+    __tablename__ = "blog"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    title: Mapped[str]
+    text: Mapped[str]
+    madeBy: Mapped["User"] = relationship(back_populates="blogs")
+    publishedAt: Mapped[Date]
+    lastEditedAt: Mapped[Date]
+    listOfComments: Mapped[List["Comment"]] = relationship(back_populates="blog")
 
     def __init__(self, user: "User"):
         self.madeBy = user
@@ -203,7 +223,7 @@ class Blog:
     def post(self, title, text, comments):
         self.title = title
         self.text = text
-        self.publishedAt = datetime.datetime.now()
+        self.publishedAt = datetime.date.now()
         self.listOfComments = comments
     """
     Post a new blog with the given title, text, and comments.
@@ -214,7 +234,7 @@ class Blog:
     def edit(self, title, text):
         self.title = title
         self.text = text
-        self.lastEditedAt = datetime.datetime.now()
+        self.lastEditedAt = datetime.date.now()
 # endregion
 
 # region Comment methods
@@ -251,7 +271,7 @@ class Blog:
 # endregion
 
 # region Comment class
-class Comment:
+class Comment(db.Model):
 
     """
     Represents a comment in the blogging system with capabilities to add and edit comments.
@@ -266,13 +286,15 @@ class Comment:
         post(commenter, blog): Post a comment
         edit(text, stars): Edit a comment
     """
+    __tablename__ = "comment"
 
-    commenter = None
-    text = ""
-    stars = 0
-    publishedAt = datetime.datetime.now()
-    blog = None
-    lastEditedAt = None
+    id: Mapped[int] = mapped_column(primary_key=True)
+    commenter: Mapped["User"] = relationship(back_populates="comments")
+    text: Mapped[str]
+    stars: Mapped[int] = mapped_column(Integer(5))
+    publishedAt: Mapped[Date]
+    blog: Mapped[Optional[List["Blog"]]] = relationship(back_populates="commment")
+    lastEditedAt: Mapped[Optional[Date]]
 
     def __init__(self, commenter: "User", blog: "Blog"):
         self.commenter = commenter
@@ -283,7 +305,7 @@ class Comment:
         
         Args:
             text (str): The comment text
-            stars (int): A rating in stars
+            stars (int): A rating in stars between 0-5
             publishedAt (datetime): The datetime the post gets published
         """
         if not self.__checkComment(text, stars):
@@ -305,7 +327,7 @@ class Comment:
             return False
         self.text = text
         self.stars = stars
-        self.lastEditedAt = datetime.datetime.now()
+        self.lastEditedAt = datetime.date.now()
         return True
 # region private methods
     def __checkComment(self, text: str, stars: int) -> bool:
