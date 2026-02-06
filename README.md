@@ -27,6 +27,6 @@ A comment (class)
 
 
 ## UML diagram
-[UML class diagram](/backend/domain.py) file.
+[UML class diagram](/resources/uml.png) file.
 
 ### Made by Gard, Leander, Samuel
