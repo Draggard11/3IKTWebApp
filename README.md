@@ -24,4 +24,9 @@ A comment (class)
 - blog Blog.class
 - lastEditedAt Time
 
+
+
+## UML diagram
+[UML class diagram](/backend/domain.py) file.
+
 ### Made by Gard, Leander, Samuel
