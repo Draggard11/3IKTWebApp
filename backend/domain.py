@@ -38,9 +38,11 @@ class User(db.Model): # Bob
 
     id: Mapped[int] = mapped_column(primary_key=True) # class attribute
     username = Mapped[str] = mapped_column(unique=True)
-    password = ""
+    password = Mapped[str]
     comments: Mapped[List["Comment"]] = relationship(back_populates="user")
     blogs = Mapped[List["Blog"]] = relationship(back_populates="user")
+
+    
 
     def __init__(self, id: str, username: str, password):
         """Initialize a User with id, username, and password.
@@ -151,7 +153,7 @@ class User(db.Model): # Bob
             if comment.edit(text, stars):
                 return True
         return False
-    
+
 # region Getter and Setter methods
     def getUsername(self):
         """Get the user's username.
@@ -169,7 +171,7 @@ class User(db.Model): # Bob
         """
         self.username = username
     
-    def getPassword(self):
+    def savePassword(self):
         """Get the user's password.
         
         Returns:
@@ -177,7 +179,7 @@ class User(db.Model): # Bob
         """
         return self.password
     
-    def setPassword(self, password):
+    def getPassword(self, password):
         """Set the user's password.
         
         Args:
@@ -196,6 +198,7 @@ class Blog(db.Model):
     title: Mapped[str]
     text: Mapped[str]
     madeBy: Mapped["User"] = relationship(back_populates="blogs")
+    user_id: Mapped[int] =mapped_column(ForeignKey("user.id"))
     publishedAt: Mapped[Date]
     lastEditedAt: Mapped[Date]
     listOfComments: Mapped[List["Comment"]] = relationship(back_populates="blog")
@@ -268,12 +271,14 @@ class Comment(db.Model):
     __tablename__ = "comment"
 
     id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     commenter: Mapped["User"] = relationship(back_populates="comments")
     text: Mapped[str]
     stars: Mapped[int] = mapped_column(Integer(5))
     publishedAt: Mapped[Date]
     blog: Mapped[Optional[List["Blog"]]] = relationship(back_populates="commment")
     lastEditedAt: Mapped[Optional[Date]]
+    blog_id: Mapped[Optional[int]] = mapped_column(ForeignKey("blog"))
 
     def __init__(self, commenter: "User", blog: "Blog"):
         self.commenter = commenter

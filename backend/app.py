@@ -1,4 +1,10 @@
 from domain import User, Blog, Comment
+from flask import Flask
+from flask_restful import Resource, Api
+import bcrypt
+
+app = Flask(__name__)
+api = Api(app)
 
 def register_user(id, username, password): # Does when you click register button
     return User(id, username, password)
@@ -12,14 +18,20 @@ def make_blog_post(user, title, text): # Does when you click create blog post bu
 def make_comment(user, blog, text, stars): # Does when you click create comment button
     pass
 
+# region Private methods
+
+def __savePassword(self, password: str) -> str:
+    return bcrypt.hashpw(password, bcrypt.gensalt())
+
+def __checkPassword(self, password: str) -> bool:
+    if bcrypt.checkpw(password, self.password):
+        return True
+    return False
+
+# endregion
+
 def main():
-    print("Hello World!")
-    user1 = User(0, "Dragg", "password123")
-    print(user1.getUsername())
-    user1.setUsername("DragonMaster")
-    print(user1.getUsername())
-    blog1 = user1.makeBlogPost("My first blog", "This is the content of my first blog post.")
-    print(blog1.__str__())
+    app.run()
 
 if __name__ == "__main__":
     main()
