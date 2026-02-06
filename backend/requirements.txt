@@ -1,2 +1,6 @@
 pytest
 coverage
+sqlalchemy
+Flask
+bcrypt
+Flask-SQLAlchemy
