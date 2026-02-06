@@ -56,6 +56,8 @@ class User(db.Model): # Bob
         self.username = username
         self.password = password
 
+# region Blog Methods
+
     def makeBlogPost(self, title: str, text: str):
         """Create a new blog post with the given title and text.
         
@@ -102,6 +104,9 @@ class User(db.Model): # Bob
         if self == blog.madeBy:
             blog.edit(title, text)
 
+# endregion
+
+# region Comment Methods
     def makeComment(self, text, stars: int, blog: "Blog"):
         """Create a new comment on a blog post.
         
@@ -153,7 +158,7 @@ class User(db.Model): # Bob
             if comment.edit(text, stars):
                 return True
         return False
-
+# endregion
 # region Getter and Setter methods
     def getUsername(self):
         """Get the user's username.
