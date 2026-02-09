@@ -6,3 +6,4 @@ def test_init():
     assert blog.madeBy == user
 
 def test_post():
+    pass
