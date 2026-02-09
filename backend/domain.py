@@ -184,6 +184,7 @@ class User(db.Model): # Bob
             password (str): The new password
         """
         self.password = password
+
 # endregion
 # endregion
 
@@ -257,6 +258,30 @@ class Blog(db.Model):
         return True
 
 # endregion
+
+# region Getter and Setter method
+    def getTitle(self):
+        
+        return self.title
+    
+    
+    def setTitle(self, title: str):
+
+        self.title = title
+
+
+    def getText(self):
+        
+        return self.text
+    
+
+    def setText(self, text: str):
+        
+        self.text = text
+
+
+# endregion
+
 # region Overridden methods
     def __eq__(self, other):
         if not isinstance(other, Blog):
