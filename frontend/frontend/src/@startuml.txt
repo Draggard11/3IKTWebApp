@@ -1,0 +1,58 @@
+@startuml
+
+class User {
+    +id: int
+    +username: str
+    +password: str
+    +comments: List<Comment>
+    +blogs: List<Blog>
+
+    +makeBlogPost(title: str, text: str): Blog
+    +deleteBlogPost(blog: Blog): bool
+    +editBlogPost(blog: Blog, title: str, text: str): void
+
+    +makeComment(text: str, stars: int, blog: Blog): Comment
+    +deleteComment(comment: Comment, blog: Blog): bool
+    +editComment(comment: Comment, text: str, stars: int): bool
+
+    +getUsername(): str
+    +setUsername(username: str): void
+    +savePassword(): str
+    +getPassword(password): void
+}
+
+class Blog {
+    +id: int
+    +title: str
+    +text: str
+    +publishedAt: Date
+    +lastEditedAt: Date
+    +listOfComments: List<Comment>
+
+    +post(title: str, text: str, comments: list): void
+    +edit(title: str, text: str): void
+    +addComment(comment: Comment): void
+    +deleteComment(comment: Comment): void
+}
+
+class Comment {
+    +id: int
+    +text: str
+    +stars: int
+    +publishedAt: Date
+    +lastEditedAt: Date
+
+    +post(text: str, stars: int): bool
+    +edit(text: str, stars: int): bool
+}
+
+' Relationships
+User "1" -- "0..*" Blog : creates
+User "1" -- "0..*" Comment : writes
+Blog "1" -- "0..*" Comment : contains
+
+Comment "1" --> "1" User : commenter
+Comment "1" --> "1" Blog : blog
+Blog "1" --> "1" User : madeBy
+
+@enduml

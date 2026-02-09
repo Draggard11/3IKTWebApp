@@ -1,0 +1,48 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:147.0) Gecko/20100101 Firefox/147.0" version="29.3.7">
+  <diagram name="Page-1" id="ZLXAJZJdkQBid9QpRn2M">
+    <mxGraphModel dx="1080" dy="665" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="t3u9sAwfFm0kHUXrXt6Y-8" edge="1" parent="1" source="t3u9sAwfFm0kHUXrXt6Y-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;endArrow=none;endFill=0;" target="t3u9sAwfFm0kHUXrXt6Y-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="t3u9sAwfFm0kHUXrXt6Y-29" connectable="0" parent="t3u9sAwfFm0kHUXrXt6Y-8" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="0..*" vertex="1">
+          <mxGeometry relative="1" x="0.7979" y="-3" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="t3u9sAwfFm0kHUXrXt6Y-1" parent="1" style="whiteSpace=wrap;html=1;aspect=fixed;align=center;" value="&lt;div align=&quot;center&quot;&gt;User&lt;/div&gt;&lt;div align=&quot;center&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;div align=&quot;center&quot;&gt;id: int&lt;/div&gt;&lt;div align=&quot;center&quot;&gt;username: str&lt;/div&gt;&lt;div align=&quot;center&quot;&gt;password: str&lt;/div&gt;&lt;div align=&quot;center&quot;&gt;comments: List&amp;lt;Comment&amp;gt;&lt;/div&gt;&lt;div align=&quot;center&quot;&gt;blogs: List&amp;lt;Blog&amp;gt;&lt;/div&gt;&lt;div align=&quot;center&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;div align=&quot;center&quot;&gt;makeBlogPost(title: str, text: str): Blog&lt;/div&gt;&lt;div align=&quot;center&quot;&gt;deleteBlogPost(blog: Blog): bool&lt;/div&gt;&lt;div align=&quot;center&quot;&gt;editBlogPost(blog: Blog, title: str, text: str): void&lt;/div&gt;&lt;div align=&quot;center&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;div align=&quot;center&quot;&gt;makeComment(text: str, stars: int, blog: Blog): Comment&lt;/div&gt;&lt;div align=&quot;center&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;deleteComment(comment: Comment, blog: Blog): bool&lt;/div&gt;&lt;div&gt;editComment(comment: Comment, text: str, stars: int): bool&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;getUsername(): str&lt;/div&gt;&lt;div&gt;setUsername(username: str): void&lt;/div&gt;&lt;div&gt;savePassword(): str&lt;/div&gt;&lt;div&gt;getPassword(password): void&lt;/div&gt;" vertex="1">
+          <mxGeometry height="340" width="340" x="280" y="205" as="geometry" />
+        </mxCell>
+        <mxCell id="t3u9sAwfFm0kHUXrXt6Y-2" parent="1" style="whiteSpace=wrap;html=1;aspect=fixed;align=center;" value="&lt;div&gt;Blog&lt;/div&gt;&lt;div&gt;id: int&lt;/div&gt;&lt;div&gt;title: str&lt;/div&gt;&lt;div&gt;text: str&lt;/div&gt;&lt;div&gt;publishedAt: Date&lt;/div&gt;&lt;div&gt;lastEditedAt: Date&lt;/div&gt;&lt;div&gt;listOfComments: List&amp;lt;Comment&amp;gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;post(title: str, text: str): void&lt;/div&gt;&lt;div&gt;edit(title: str, text: str): void&lt;/div&gt;&lt;div&gt;addComment(comment: Comment): void&lt;/div&gt;&lt;div&gt;deleteComment(comment: Comment): void&lt;/div&gt;" vertex="1">
+          <mxGeometry height="250" width="250" x="145" y="645" as="geometry" />
+        </mxCell>
+        <mxCell id="t3u9sAwfFm0kHUXrXt6Y-3" parent="1" style="whiteSpace=wrap;html=1;aspect=fixed;align=center;" value="&lt;div&gt;Comment&lt;/div&gt;&lt;div&gt;id: int&lt;/div&gt;&lt;div&gt;text: str&lt;/div&gt;&lt;div&gt;stars: int&lt;/div&gt;&lt;div&gt;publishedAt: Date&lt;/div&gt;&lt;div&gt;lastEditedAt: Date&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;post(text: str, stars: int): bool&lt;/div&gt;&lt;div&gt;edit(text: str, stars: int): bool&lt;/div&gt;" vertex="1">
+          <mxGeometry height="190" width="190" x="515" y="685" as="geometry" />
+        </mxCell>
+        <mxCell id="t3u9sAwfFm0kHUXrXt6Y-6" edge="1" parent="1" source="t3u9sAwfFm0kHUXrXt6Y-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.437;entryY=-0.007;entryDx=0;entryDy=0;entryPerimeter=0;endArrow=none;endFill=0;align=center;labelPosition=center;verticalLabelPosition=middle;verticalAlign=middle;" target="t3u9sAwfFm0kHUXrXt6Y-2" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="t3u9sAwfFm0kHUXrXt6Y-27" connectable="0" parent="t3u9sAwfFm0kHUXrXt6Y-6" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="1..1" vertex="1">
+          <mxGeometry relative="1" x="-0.8882" y="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="t3u9sAwfFm0kHUXrXt6Y-28" connectable="0" parent="t3u9sAwfFm0kHUXrXt6Y-6" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="0..*" vertex="1">
+          <mxGeometry relative="1" x="0.8633" y="-1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="t3u9sAwfFm0kHUXrXt6Y-7" edge="1" parent="1" source="t3u9sAwfFm0kHUXrXt6Y-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=-0.002;entryY=0.445;entryDx=0;entryDy=0;entryPerimeter=0;endArrow=none;endFill=0;" target="t3u9sAwfFm0kHUXrXt6Y-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="t3u9sAwfFm0kHUXrXt6Y-32" connectable="0" parent="t3u9sAwfFm0kHUXrXt6Y-7" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="1..1" vertex="1">
+          <mxGeometry relative="1" x="-0.8125" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

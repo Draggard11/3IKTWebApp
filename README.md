@@ -27,6 +27,6 @@ A comment (class)
 
 
 ## UML diagram
-[UML class diagram](/resources/uml.png) file.
+[UML class diagram](/resources/uml_v0.1.drawio.png) file.
 
 ### Made by Gard, Leander, Samuel
