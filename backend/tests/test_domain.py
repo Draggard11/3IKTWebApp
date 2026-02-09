@@ -20,7 +20,7 @@ def test_user_edit_blog_post(): # user functionality
 def test_user_delete_blog_post(): # user functionality
     user = User(2, "arvid", "gimre")
     blog = user.makeBlogPost("Why you should vote for NHOKP® next election", "We make smoke detectors")
-    user.deleteBlogPost(blog)
+    assert user.deleteBlogPost(blog)
     assert blog not in user.blogs
 
 def test_user_edit_and_delete_blog_post(): # user scenario
@@ -29,7 +29,7 @@ def test_user_edit_and_delete_blog_post(): # user scenario
     user.editBlogPost(blog, "Updated Title", "Updated Content")
     assert blog.title == "Updated Title"
     assert blog.text == "Updated Content"
-    user.deleteBlogPost(blog)
+    assert user.deleteBlogPost(blog)
     assert blog not in user.blogs
 
 def test_user_make_comment(): # user functionality

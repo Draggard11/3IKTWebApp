@@ -1,6 +1,4 @@
-import datetime
-from typing import List
-from typing import Optional
+from typing import List, Optional
 from sqlalchemy import ForeignKey
 from sqlalchemy import String, Integer, Boolean, Date, Uuid
 from sqlalchemy.orm import DeclarativeBase
@@ -37,10 +35,10 @@ class User(db.Model): # Bob
     __tablename__ = "user"
 
     id: Mapped[int] = mapped_column(primary_key=True) # class attribute
-    username = Mapped[str] = mapped_column(unique=True)
-    password = Mapped[str]
-    comments: Mapped[List["Comment"]] = relationship(back_populates="user")
-    blogs = Mapped[List["Blog"]] = relationship(back_populates="user")
+    username: Mapped[str] = mapped_column(unique=True)
+    password: Mapped[str]
+    comments: Mapped[List["Comment"]] = relationship(back_populates="commenter")
+    blogs: Mapped[List["Blog"]] = relationship(back_populates="madeBy")
 
     
 
@@ -69,10 +67,9 @@ class User(db.Model): # Bob
             Blog: The created Blog object, or None if title or text is empty or blog already exists
         """
         if not title or not text:
+            print("error")
             return None
         blog = Blog(self)
-        if blog in self.blogs:
-            return None
         blog.post(title, text, [])
         self.blogs.append(blog)
         return blog
@@ -83,15 +80,12 @@ class User(db.Model): # Bob
         Args:
             blog (Blog): The blog post to delete
         """
-        if self != blog.madeBy:
-            return False
-
         try:
-            blog_index = self.blogs.index(blog)
+            self.blogs.remove(blog)
+            return True
         except ValueError:
             return False
-        del self.blogs[blog_index]
-        return True
+        return False
 
     def editBlogPost(self, blog: "Blog", title: str, text: str):
         """Edit a blog post if the user is the author.
@@ -137,13 +131,12 @@ class User(db.Model): # Bob
             return True
         if self == comment.commenter:
             try:
-                comment_index = self.comments.index(comment)
+                self.comments.remove(comment)
+                blog.deleteComment(comment)
+                del comment
+                return True
             except ValueError:
                 return False
-            del self.comments[comment_index]
-            blog.deleteComment(comment)
-            del comment
-            return True
         return False
 
     def editComment(self, comment: "Comment", text: str, stars: int):
@@ -219,10 +212,10 @@ class Blog(db.Model):
     title: Mapped[str]
     text: Mapped[str]
     madeBy: Mapped["User"] = relationship(back_populates="blogs")
-    user_id: Mapped[int] =mapped_column(ForeignKey("user.id"))
-    publishedAt: Mapped[Date]
-    lastEditedAt: Mapped[Date]
-    listOfComments: Mapped[List["Comment"]] = relationship(back_populates="blog")
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+    publishedAt: Mapped[int]
+    lastEditedAt: Mapped[int]
+    comments: Mapped[List["Comment"]] = relationship(back_populates="blog")
 
     def __init__(self, user: "User"):
         self.madeBy = user
@@ -231,8 +224,8 @@ class Blog(db.Model):
     def post(self, title, text, comments):
         self.title = title
         self.text = text
-        self.publishedAt = datetime.date.now()
-        self.listOfComments = comments
+        self.publishedAt = 0
+        self.comments = comments
     """
     Post a new blog with the given title, text, and comments.
 
@@ -242,19 +235,19 @@ class Blog(db.Model):
     def edit(self, title, text):
         self.title = title
         self.text = text
-        self.lastEditedAt = datetime.date.now()
+        self.lastEditedAt = 0
 # endregion
 
 # region Comment methods
     def addComment(self, comment):
-        self.listOfComments.append(comment)
+        self.comments.append(comment)
     
     def deleteComment(self, comment):
         try:
-            comment_index = self.listOfComments.index(comment)
+            self.comments.remove(comment)
         except ValueError:
             return
-        del self.listOfComments[comment_index]
+
 # endregion
 
 # region Private methods
@@ -300,11 +293,11 @@ class Comment(db.Model):
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     commenter: Mapped["User"] = relationship(back_populates="comments")
     text: Mapped[str]
-    stars: Mapped[int] = mapped_column(Integer(5))
-    publishedAt: Mapped[Date]
-    blog: Mapped[Optional[List["Blog"]]] = relationship(back_populates="commment")
-    lastEditedAt: Mapped[Optional[Date]]
-    blog_id: Mapped[Optional[int]] = mapped_column(ForeignKey("blog"))
+    stars: Mapped[int]
+    publishedAt: Mapped[int]
+    blog: Mapped[Optional["Blog"]] = relationship(back_populates="comments")
+    blog_id: Mapped[Optional[int]] = mapped_column(ForeignKey("blog.id"))
+    lastEditedAt: Mapped[Optional[int]]
 
     def __init__(self, commenter: "User", blog: "Blog"):
         self.commenter = commenter
@@ -322,7 +315,7 @@ class Comment(db.Model):
             return False
         self.text = text
         self.stars = stars
-        self.publishedAt = datetime.datetime.now()
+        self.publishedAt = 0
         return True
 
     def edit(self, text: str, stars: int):
@@ -337,7 +330,7 @@ class Comment(db.Model):
             return False
         self.text = text
         self.stars = stars
-        self.lastEditedAt = datetime.date.now()
+        self.lastEditedAt = 0
         return True
 # region private methods
     def __checkComment(self, text: str, stars: int) -> bool:
