@@ -37,10 +37,8 @@ class User(db.Model): # Bob
     id: Mapped[int] = mapped_column(primary_key=True) # class attribute
     username: Mapped[str] = mapped_column(unique=True)
     password: Mapped[str]
-    comments: Mapped[List["Comment"]] = relationship(back_populates="commenter")
-    blogs: Mapped[List["Blog"]] = relationship(back_populates="madeBy")
-
-    
+    comments: Mapped[List["Comment"]] = relationship(cascade="all, delete-orphan", back_populates="commenter")
+    blogs: Mapped[List["Blog"]] = relationship(cascade="all, delete-orphan", back_populates="madeBy")
 
     def __init__(self, id: str, username: str, password):
         """Initialize a User with id, username, and password.
@@ -81,8 +79,9 @@ class User(db.Model): # Bob
             blog (Blog): The blog post to delete
         """
         try:
-            self.blogs.remove(blog)
-            return True
+            if blog in self.blogs:
+                self.blogs.remove(blog)
+                return True
         except ValueError:
             return False
         return False
@@ -125,18 +124,13 @@ class User(db.Model): # Bob
             comment (Comment): The comment to delete
             blog (Blog): The blog containing the comment
         """
-        if self == blog.madeBy:
-            blog.deleteComment(comment)
-            comment.commenter.deleteComment(comment, blog)
-            return True
-        if self == comment.commenter:
-            try:
+
+        if self == blog.madeBy or self == comment.commenter:
+            if comment in self.comments:
                 self.comments.remove(comment)
+            if comment in blog.comments:
                 blog.deleteComment(comment)
-                del comment
-                return True
-            except ValueError:
-                return False
+            return True
         return False
 
     def editComment(self, comment: "Comment", text: str, stars: int):
@@ -215,8 +209,8 @@ class Blog(db.Model):
     madeBy: Mapped["User"] = relationship(back_populates="blogs")
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     publishedAt: Mapped[int]
-    lastEditedAt: Mapped[int]
-    comments: Mapped[List["Comment"]] = relationship(back_populates="blog")
+    lastEditedAt: Mapped[int | None]
+    comments: Mapped[List["Comment"]] = relationship(cascade="all, delete-orphan", back_populates="blog")
 
     def __init__(self, user: "User"):
         self.madeBy = user
