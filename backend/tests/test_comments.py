@@ -28,8 +28,12 @@ def test_post_1():
     
 
 def test_edit():
-    pass
-
+    user = User(0, "username", "passwd")
+    blog = Blog(user)
+    comment = Comment(user, blog)
+    
+    assert not comment.edit("", -1)
+    assert not comment.edit("Muldvarp", 4)
 
 def test_post_2():
     user = User(0, "username", "passwd")
