@@ -64,12 +64,6 @@ class User(db.Model): # Bob
         Returns:
             Blog: The created Blog object, or None if title or text is empty or blog already exists
         """
-        if not title or not text:
-            raise NameError("The title and text cannot be empty")
-        elif len(title) > 40:
-            raise NameError("The text is too long.")
-        elif len(text) > 500:
-            raise NameError("The title is too long.")
         blog = Blog(self)
         blog.post(title, text, [])
         self.blogs.append(blog)
@@ -220,10 +214,14 @@ class Blog(db.Model):
 
 # region Blog methods
     def post(self, title, text, comments):
+        if not self.__checkBlog(title, text):
+            return False
         self.title = title
         self.text = text
         self.publishedAt = 0
         self.comments = comments
+        return True
+
     """
     Post a new blog with the given title, text, and comments.
 
@@ -231,9 +229,14 @@ class Blog(db.Model):
     """
     
     def edit(self, title, text):
+        if not self.__checkBlog(self.title, self.text):
+            return False
+        if not self.__checkBlog(title, text):
+            return False
         self.title = title
         self.text = text
         self.lastEditedAt = 0
+        return True
 # endregion
 
 # region Comment methods
@@ -250,10 +253,14 @@ class Blog(db.Model):
 
 # region Private methods
     def __checkBlog(self, title: str, text: str) -> bool:
-        if not title or not text:
-            return False
-        elif len(text) > 500 or len(title) > 40:
-            return False
+        if not title:
+            raise ValueError("The title cannot be empty.")
+        elif not text:
+            raise ValueError("The text cannot be empty.")
+        elif len(title.split()) > 40:
+            raise ValueError("The title is too long.")
+        elif len(text.split()) > 500:
+            raise ValueError("The text is too long.")
         return True
 
 # endregion
@@ -359,6 +366,7 @@ class Comment(db.Model):
         self.stars = stars
         self.lastEditedAt = 0
         return True
+
 # region private methods
     def __checkComment(self, text: str, stars: int) -> bool:
         if not text or not stars:
@@ -376,5 +384,22 @@ class Comment(db.Model):
         result = len(text) <= 50
         return result
 # endregion
+
+# region Getter and Setter methods
+
+    def getText(self):
+        return self.text
+
+    def setText(self, text):
+        self.text = text
+
+    def getStars(self):
+        return self.stars
+
+    def setStars(self, stars):
+        self.stars = stars
+
+# endregion
+
 # endregion
 # endregion
