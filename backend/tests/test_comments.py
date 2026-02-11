@@ -5,4 +5,7 @@ def test_init():
     blog = Blog(user)
     comment = Comment(user, blog)
 
-    assert comment.post("arvidgimre", 4)
+    comment.post("Arvid Gimre.", 5)
+
+    assert comment.text == "Arvid Gimre."
+    assert comment.stars == 5
