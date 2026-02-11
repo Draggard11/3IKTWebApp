@@ -65,8 +65,11 @@ class User(db.Model): # Bob
             Blog: The created Blog object, or None if title or text is empty or blog already exists
         """
         if not title or not text:
-            print("error")
-            return None
+            raise NameError("The title and text cannot be empty")
+        elif len(title) > 40:
+            raise NameError("The text is too long.")
+        elif len(text) > 500:
+            raise NameError("The title is too long.")
         blog = Blog(self)
         blog.post(title, text, [])
         self.blogs.append(blog)
@@ -248,6 +251,8 @@ class Blog(db.Model):
 # region Private methods
     def __checkBlog(self, title: str, text: str) -> bool:
         if not title or not text:
+            return False
+        elif len(text) > 500 or len(title) > 40:
             return False
         return True
 
