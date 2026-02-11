@@ -1,4 +1,4 @@
-from backend.domain import User, Blog, Comment
+from backend.domain import User, Blog, Comment, db
 
 def test_init():
     user = User(0, "username", "passwd")
@@ -8,7 +8,7 @@ def test_init():
     assert comment.blog == blog
     
 
-def test_post():
+def test_post_1():
     user = User(0, "username", "passwd")
     blog = Blog(user)
     comment = Comment(user, blog)
@@ -29,3 +29,14 @@ def test_post():
 
 def test_edit():
     pass
+
+
+def test_post_2():
+    user = User(0, "username", "passwd")
+    blog = Blog(user)
+    comment = Comment(user, blog)
+    text = "A" * 50
+    stars = 5
+    comment.post(text, stars)
+    assert comment.text == text
+    assert comment.stars == stars
