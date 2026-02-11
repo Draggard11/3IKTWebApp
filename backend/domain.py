@@ -326,6 +326,7 @@ class Comment(db.Model):
     def __init__(self, commenter: "User", blog: "Blog"):
         self.commenter = commenter
         self.blog = blog
+
 # region Comment methods
     def post(self, text: str, stars: int):
         """Create a new comment on a blog post.
@@ -350,6 +351,8 @@ class Comment(db.Model):
             stars (int): A rating in stars
             lastEditedAt (datetime): The datetime the post was last edited
         """
+        if not self.__checkComment(self.text, self.stars):
+            return False
         if not self.__checkComment(text, stars):
             return False
         self.text = text
@@ -364,7 +367,7 @@ class Comment(db.Model):
             return False
         if self.__checkText(text) is False: return False
         return True
-    
+    # stars should be inbetween 1 and 5
     def __checkStars(self, stars: int) -> bool:
         result = stars in range(0,6)
         return result
