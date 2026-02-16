@@ -5,4 +5,8 @@ def test_init():
     blog = Blog(user)
     assert blog.madeBy == user
 
-def test_post():
+def test_user_make_blog_post():
+    user = User(0, "Bob", "pass123")
+    blog = user.makeBlogPost("My First Blog", "This is the content of my first blog post.")
+    assert isinstance(blog, Blog)
+    assert blog in user.blogs
