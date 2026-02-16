@@ -37,10 +37,8 @@ class User(db.Model): # Bob
     id: Mapped[int] = mapped_column(primary_key=True) # class attribute
     username: Mapped[str] = mapped_column(unique=True)
     password: Mapped[str]
-    comments: Mapped[List["Comment"]] = relationship(back_populates="commenter")
-    blogs: Mapped[List["Blog"]] = relationship(back_populates="madeBy")
-
-    
+    comments: Mapped[List["Comment"]] = relationship(cascade="all, delete-orphan", back_populates="commenter")
+    blogs: Mapped[List["Blog"]] = relationship(cascade="all, delete-orphan", back_populates="madeBy")
 
     def __init__(self, id: str, username: str, password):
         """Initialize a User with id, username, and password.
@@ -66,9 +64,6 @@ class User(db.Model): # Bob
         Returns:
             Blog: The created Blog object, or None if title or text is empty or blog already exists
         """
-        if not title or not text:
-            print("error")
-            return None
         blog = Blog(self)
         blog.post(title, text, [])
         self.blogs.append(blog)
@@ -81,8 +76,9 @@ class User(db.Model): # Bob
             blog (Blog): The blog post to delete
         """
         try:
-            self.blogs.remove(blog)
-            return True
+            if blog in self.blogs:
+                self.blogs.remove(blog)
+                return True
         except ValueError:
             return False
         return False
@@ -125,18 +121,13 @@ class User(db.Model): # Bob
             comment (Comment): The comment to delete
             blog (Blog): The blog containing the comment
         """
-        if self == blog.madeBy:
-            blog.deleteComment(comment)
-            comment.commenter.deleteComment(comment, blog)
-            return True
-        if self == comment.commenter:
-            try:
+
+        if self == blog.madeBy or self == comment.commenter:
+            if comment in self.comments:
                 self.comments.remove(comment)
+            if comment in blog.comments:
                 blog.deleteComment(comment)
-                del comment
-                return True
-            except ValueError:
-                return False
+            return True
         return False
 
     def editComment(self, comment: "Comment", text: str, stars: int):
@@ -215,18 +206,22 @@ class Blog(db.Model):
     madeBy: Mapped["User"] = relationship(back_populates="blogs")
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     publishedAt: Mapped[int]
-    lastEditedAt: Mapped[int]
-    comments: Mapped[List["Comment"]] = relationship(back_populates="blog")
+    lastEditedAt: Mapped[int | None]
+    comments: Mapped[List["Comment"]] = relationship(cascade="all, delete-orphan", back_populates="blog")
 
     def __init__(self, user: "User"):
         self.madeBy = user
 
 # region Blog methods
     def post(self, title, text, comments):
+        if not self.__checkBlog(title, text):
+            return False
         self.title = title
         self.text = text
         self.publishedAt = 0
         self.comments = comments
+        return True
+
     """
     Post a new blog with the given title, text, and comments.
 
@@ -234,9 +229,14 @@ class Blog(db.Model):
     """
     
     def edit(self, title, text):
+        if not self.__checkBlog(self.title, self.text):
+            return False
+        if not self.__checkBlog(title, text):
+            return False
         self.title = title
         self.text = text
         self.lastEditedAt = 0
+        return True
 # endregion
 
 # region Comment methods
@@ -253,7 +253,17 @@ class Blog(db.Model):
 
 # region Private methods
     def __checkBlog(self, title: str, text: str) -> bool:
-        if not title or not text:
+        if not title:
+            print("The title cannot be empty.")
+            return False
+        elif not text:
+            print("The text cannot be empty.")
+            return False
+        elif len(title.split()) > 40:
+            print("The title is too long.")
+            return False
+        elif len(text.split()) > 500:
+            print("The text is too long.")
             return False
         return True
 
@@ -327,6 +337,7 @@ class Comment(db.Model):
     def __init__(self, commenter: "User", blog: "Blog"):
         self.commenter = commenter
         self.blog = blog
+
 # region Comment methods
     def post(self, text: str, stars: int):
         """Create a new comment on a blog post.
@@ -351,12 +362,15 @@ class Comment(db.Model):
             stars (int): A rating in stars
             lastEditedAt (datetime): The datetime the post was last edited
         """
+        if not self.__checkComment(self.text, self.stars):
+            return False
         if not self.__checkComment(text, stars):
             return False
         self.text = text
         self.stars = stars
         self.lastEditedAt = 0
         return True
+
 # region private methods
     def __checkComment(self, text: str, stars: int) -> bool:
         if not text or not stars:
@@ -365,7 +379,7 @@ class Comment(db.Model):
             return False
         if self.__checkText(text) is False: return False
         return True
-    
+    # stars should be inbetween 1 and 5
     def __checkStars(self, stars: int) -> bool:
         result = stars in range(0,6)
         return result
@@ -374,5 +388,22 @@ class Comment(db.Model):
         result = len(text) <= 50
         return result
 # endregion
+
+# region Getter and Setter methods
+
+    def getText(self):
+        return self.text
+
+    def setText(self, text):
+        self.text = text
+
+    def getStars(self):
+        return self.stars
+
+    def setStars(self, stars):
+        self.stars = stars
+
+# endregion
+
 # endregion
 # endregion
