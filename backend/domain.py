@@ -254,13 +254,17 @@ class Blog(db.Model):
 # region Private methods
     def __checkBlog(self, title: str, text: str) -> bool:
         if not title:
-            raise ValueError("The title cannot be empty.")
+            print("The title cannot be empty.")
+            return False
         elif not text:
-            raise ValueError("The text cannot be empty.")
+            print("The text cannot be empty.")
+            return False
         elif len(title.split()) > 40:
-            raise ValueError("The title is too long.")
+            print("The title is too long.")
+            return False
         elif len(text.split()) > 500:
-            raise ValueError("The text is too long.")
+            print("The text is too long.")
+            return False
         return True
 
 # endregion
