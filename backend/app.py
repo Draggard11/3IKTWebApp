@@ -1,13 +1,24 @@
 from domain import User, Blog, Comment
-from flask import Flask
+from flask import Flask, jsonify
 from flask_restful import Resource, Api
+from flask_cors import CORS
 import bcrypt
 
 app = Flask(__name__)
+CORS(app,, origins=["http://localhost:5173"])
 api = Api(app)
 
-def register_user(id, username, password): # Does when you click register button
-    return User(id, username, password)
+@app.route("/", methods=["GET"])
+def home():
+    return jsonify({"username": "bob"})
+
+@app.route("/register")
+def register():
+    return "works"
+
+@app.route("/register", methods=["POST"])
+def register_user(username, password): # Does when you click register button
+    return "User(username, password)"
 
 def login_user(username, password): # Does when you click login button
     pass
