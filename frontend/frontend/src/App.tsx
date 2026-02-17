@@ -1,33 +1,57 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useEffect, useState } from 'react'
 import './App.css'
 
-function App() {
-  const [count, setCount] = useState(0)
+const Blogs = () => {
+  
+  const [allblogs, setAllblogs] = useState<any[]>([]);
+
+  // useEffect(() => {
+  //   const fetchBlogs = async () => {
+  //     try {
+  //       const response = await fetch('http://127.0.0.1:5000/api/blogs');
+  //       const data = await response.json();
+  //       console.log(`Response's response: ${response}`);
+  //       setAllblogs(data);
+  //     }
+  //     catch (error) {
+  //       console.error('Error when fetching blogs: ', error);
+  //     }
+  //   }; fetchBlogs();
+  // }, []);
+
+  const mockBlogs = [
+    { id: 1, title: 'Test blog 1', text: 'Hello World' },
+    { id: 2, title: 'Test blog 2', text: 'Hello Earth' },
+  ];
+
+  useEffect(() => {
+    setAllblogs(mockBlogs);
+    return;
+  }, []);
 
   return (
     <>
+      {allblogs.map((blog, index) => {
+        <div key={index} id='blog-title-card'>
+          <p>{blog.title}</p>
+        </div>
+      })}
+    </>
+  )
+
+}
+
+function App() {
+  return (
+    <>
       <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        {/*"ingrapon, ruva"*/}
+        <h1>VCSCHCIBP</h1>
+        <h3></h3>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+      <div>
+        <Blogs />
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   )
 }
