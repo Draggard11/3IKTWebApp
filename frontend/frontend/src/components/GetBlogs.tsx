@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import type { Blog } from "./ShowBlogs";
+import { ShowBlogs } from "./ShowBlogs";
 function GetBlogs() {
     const [allBlogs, setAllBlogs] = useState<Blog[]>([]);
 
@@ -24,7 +25,10 @@ function GetBlogs() {
     useEffect(() => {
         setAllBlogs(mockBlogs);
     }, []);
-    return allBlogs;
+    
+    return allBlogs.forEach(element => {
+        ShowBlogs(element);
+    });;
 
 //   const [allblogs, setAllblogs] = useState<any[]>([]);
 //     useEffect(() => {
