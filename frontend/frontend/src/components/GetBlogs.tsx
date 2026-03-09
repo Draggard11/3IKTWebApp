@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-
+import type { Blog } from "./ShowBlogs";
 function GetBlogs() {
-    const [allBlogs, setAllBlogs] = useState<any[]>([]);
+    const [allBlogs, setAllBlogs] = useState<Blog[]>([]);
 
     const mockBlogs = [
         { id: 1, title: 'Getting Started with React', text: 'React has revolutionized how we build web applications. In this comprehensive guide, I\'ll walk you through the foundational concepts that make React so powerful. First, let\'s understand what React is: it\'s a JavaScript library for building user interfaces with reusable components. Components are the building blocks of any React application, and they encapsulate both the structure (JSX) and logic (JavaScript) needed to render a part of your UI. One of React\'s key features is its virtual DOM, which optimizes rendering performance by updating only the parts of the DOM that have changed. When you\'re starting out, focus on understanding functional components and hooks, which have become the modern standard. The useState hook allows you to add state to functional components, while useEffect lets you perform side effects like fetching data. JSX, React\'s syntax extension, looks like HTML but is actually JavaScript, making it intuitive for beginners. As you progress, you\'ll discover props for passing data between components and lifting state up for managing shared data. Remember that React follows a declarative programming style, meaning you describe what the UI should look like, and React handles the updates. Practice building small projects, start with props and state, then gradually introduce more complex patterns. The React ecosystem is vast with tools like React Router for navigation and state management libraries, but master the basics first.', madeBy: 'Alice', comments: [{commenter: 'john', text: 'Great intro!', stars: 5}, {commenter: 'jane', text: 'Very helpful', stars: 4}]},
