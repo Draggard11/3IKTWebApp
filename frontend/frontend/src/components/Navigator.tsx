@@ -16,3 +16,5 @@ const Navigator = () => {
         </div>
     )
 }
+
+export default Navigator

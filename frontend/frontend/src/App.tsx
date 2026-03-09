@@ -1,27 +1,26 @@
-import { useEffect, useState } from 'react'
-import './styles/App.css';
-import Home from './pages/Home'
+import { Routes, Route, BrowserRouter, NavLink } from "react-router";
+import "./styles/App.css";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
 
 function App() {
   return (
     <>
-      <div>
-        {/*"ingrapon, ruva, VCSCHCIBP"*/}
-        <h1>Vietnamese Blog</h1>
-        <nav>
-          <a> Home </a>| 
-          <a> Blogs </a>| 
-          <a> Login? </a>| 
-          <a> Regsiter/Login </a>| 
-          <a> Login/Register </a>|
-          <a> Register? </a>
-        </nav>
-      </div>
-      <div>
-        <Home />
-      </div>
+      <BrowserRouter>
+        <div>
+          <h1>Vietnamese Blog</h1>
+          <nav  style={{fontSize: 24}}>
+            <NavLink to="/"> Home</NavLink> |
+            <NavLink to="/login"> Login</NavLink>
+          </nav>
+        </div>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />}/>
+        </Routes>
+      </BrowserRouter>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
