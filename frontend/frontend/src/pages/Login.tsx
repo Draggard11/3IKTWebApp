@@ -1,6 +1,9 @@
 function Login() {
     return (
-        <h1>Nước Việt Nam rất lớn ở nước Pháp</h1>
+      <>
+        <h1>Đăng nhập</h1>
+        <p></p>
+      </>
     )
 }
 export default Login

@@ -7,7 +7,7 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        <div>
+        <div style={{display: "flex", alignItems: 'center', flexDirection: 'column',}}>
           <h1>Vietnamese Blog</h1>
           <nav  style={{fontSize: 24}}>
             <NavLink to="/"> Home</NavLink> |

@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import type { Blog } from "./ShowBlogs";
-import { ShowBlogs } from "./ShowBlogs";
+import { BlogCard } from "./ShowBlogs";
+
+import '../styles/GetBlogs.css';
+
 function GetBlogs() {
     const [allBlogs, setAllBlogs] = useState<Blog[]>([]);
 
@@ -26,9 +29,13 @@ function GetBlogs() {
         setAllBlogs(mockBlogs);
     }, []);
     
-    return allBlogs.forEach(element => {
-        ShowBlogs(element);
-    });;
+    return (
+        <div id="blogs">
+            {allBlogs.map((blog) => (
+                <BlogCard key={blog.id} blog={blog} />
+            ))}
+        </div>
+    )
 
 //   const [allblogs, setAllblogs] = useState<any[]>([]);
 //     useEffect(() => {

@@ -1,0 +1,22 @@
+#blog-title-card {
+    display: flex;
+    flex-direction: column;
+    width: '100%';
+    margin-bottom: 12px;
+    margin-top: 12px;
+    padding: 8px;
+    background-color: #929975;
+    border-radius: 16px;
+    border-style: inset;
+    animation: borderColorBlogTitleCard 7s ease-in-out alternate infinite;
+    border-width: 5px;
+    line-height: 1.5;
+};
+
+h2 {
+    font-size: 24px;
+}
+
+p {
+    font-size: 20px;
+}

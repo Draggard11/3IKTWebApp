@@ -3,13 +3,3 @@
     background-color: var(--light-bg-color);
     font-family: 'arial';
 }
-
-button {
-    border-style: dashed;
-    border-width: 2px;
-    border-color: aqua;
-    border-end-end-radius: 12px;
-    border-left-width: .4px;
-    border-right-width: 13px;
-    background-color: rgb(95, 86, 226);
-}
