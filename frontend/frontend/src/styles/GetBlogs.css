@@ -1,15 +1,22 @@
+:root {
+    --mw: 50%;
+}
+
 body {
+    margin: 0;
+}
+
+#blogs-container {
     display: flex;
     flex-direction: column;
-    background-color: green;
-    justify-content: center;
     align-items: center;
-    margin: 0;
+    justify-content: center;
+    width: var(--mw);
 }
 
 #blogs {
     flex: 1;
-    background-color: aqua;
     margin-right: 12px;
     margin-left: 12px;
+    width: 100%;
 }

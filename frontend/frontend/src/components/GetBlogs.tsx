@@ -28,12 +28,17 @@ function GetBlogs() {
     useEffect(() => {
         setAllBlogs(mockBlogs);
     }, []);
-    
+
     return (
-        <div id="blogs">
-            {allBlogs.map((blog) => (
-                <BlogCard key={blog.id} blog={blog} />
-            ))}
+        <div id="blogs-container">
+            <div id="blogs">
+                {allBlogs.map((blog) => (
+                    <>
+                        <BlogCard key={blog.id} blog={blog} />
+                        {/*<button onClick={() => ExpandBlog(blog.id)}>Show more for £19.95</button>*/}
+                    </>
+                ))}
+            </div>
         </div>
     )
 

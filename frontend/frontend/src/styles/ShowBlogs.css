@@ -18,5 +18,22 @@ h2 {
 }
 
 p {
-    font-size: 20px;
+    font-size: 16px;
+}
+
+#comment-section {
+    display: flex;
+    flex-direction: column;
+    border-style: solid;
+    border-width: 1.5px;
+    height: 25%;
+}
+
+#comments {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    align-items: center;
+    width: fit-content;
+    height: fit-content;
 }

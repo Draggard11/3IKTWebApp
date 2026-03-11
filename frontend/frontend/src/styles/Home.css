@@ -5,3 +5,10 @@
     75% {border-color: brown;}
     100% {border-color: green;}
 }
+
+#container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
