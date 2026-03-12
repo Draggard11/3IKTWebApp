@@ -10,8 +10,18 @@
     border-style: inset;
     animation: borderColorBlogTitleCard 7s ease-in-out alternate infinite;
     border-width: 5px;
-    line-height: 1.5;
-};
+    line-height: 1.2;
+}
+
+#blog-text {
+    font-size: 20px;
+    margin-top: 16px;
+}
+
+h1, h2, h3, h4, p {
+    margin: 0;
+    padding: 0;
+}
 
 h2 {
     font-size: 24px;
@@ -21,19 +31,31 @@ p {
     font-size: 16px;
 }
 
+#comment-section-container {
+    margin-top: 16px;
+}
+
 #comment-section {
     display: flex;
     flex-direction: column;
     border-style: solid;
     border-width: 1.5px;
-    height: 25%;
+    width: fit-content;
+    margin-top: 8px;
+    padding: 4px;
+
 }
 
-#comments {
+#comments-row {
     display: flex;
     flex-direction: row;
     gap: 16px;
     align-items: center;
     width: fit-content;
     height: fit-content;
+}
+
+#comments-column {
+    display: flex;
+    flex-direction: column;
 }
