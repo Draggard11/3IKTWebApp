@@ -1,0 +1,26 @@
+#container {
+    display: flex;
+    flex-direction: column;
+}
+
+#heading {
+    font-size: 26px;
+}
+
+#account {
+    margin-bottom: 12px;
+    margin-top: 12px;
+}
+
+#login-or-register {
+    border-style: solid;
+    border-width: 1px;
+    width: fit-content;
+    height: fit-content;
+    padding: 8px;
+}
+
+#navlink {
+    padding-top: 8px;
+    font-size: 20px;
+}

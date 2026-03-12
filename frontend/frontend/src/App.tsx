@@ -7,13 +7,14 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        <div style={{display: "flex", alignItems: 'center', flexDirection: 'column',}}>
-          <h1>Vietnamese Blog</h1>
-          <nav  style={{fontSize: 24}}>
+        <div id="container">
+          <h1 style={{fontSize: 38}}>Vietnamese Blog</h1>
+          <nav id="navlink">
             <NavLink to="/"> Home</NavLink> |
-            <NavLink to="/login"> Login</NavLink>
+            <NavLink to="/login"> Login/Register</NavLink>
           </nav>
         </div>
+        <br /><br />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />}/>
