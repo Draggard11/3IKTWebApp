@@ -6,33 +6,70 @@ import '../styles/GetBlogs.css';
 import mockBlogs from './MockBlogs.json';
 
 function GetBlogs() {
-    const [allBlogs, setAllBlogs] = useState<Blog[]>([]);
-    const [blogCounter, setBlogCounter] = useState<number>(0);
+    const [allBlogs, setAllBlogs] = useState<Blog[]>(mockBlogs);
+
+    const blogCounterSteps = 10;
+    const [blogCounterStart, setBlogCounterStart] = useState<number>(0);
+    const [blogCounterEnd, setBlogCounterEnd] = useState<number>(blogCounterSteps);
+
     const [pageNumber, setPageNumber] = useState<number>(1);
 
-    const displayNBlogs = allBlogs.slice(0, blogCounter);
+    const displayNBlogs = allBlogs.slice(blogCounterStart, blogCounterEnd);
 
-    useEffect(() => {
-        setAllBlogs(mockBlogs);
-        setBlogCounter(20);
-    }, []);
+    const [disableNextBtn, setDisableNextBtn] = useState<boolean>(false);
+    const [disableLastBtn, setDisableLastBtn] = useState<boolean>(true);
+
+    function ShowBlogs() {
+        return (
+            displayNBlogs.map((blog) => (
+                <>
+                    <BlogCard key={blog.id} blog={blog} />
+                    {/*<button onClick={() => ExpandBlog(blog.id)}>Show more for £19.95</button>*/}
+                </>
+            ))
+        )
+    }
+
+    const NextPage = () => {
+        
+        if (pageNumber === allBlogs.length / blogCounterSteps) {
+            setDisableNextBtn(true);
+            return;
+        }
+        setDisableNextBtn(false);
+        setDisableLastBtn(false);
+
+        setPageNumber(pageNumber + 1);
+
+        setBlogCounterStart(blogCounterStart + blogCounterSteps); //changes the blog's start value to display
+        setBlogCounterEnd(blogCounterEnd + blogCounterSteps); //changes the blog's end value to display
+    }
+
+    const LastPage = () => {
+
+        if (pageNumber === 1) {
+            setDisableLastBtn(true);
+            return;
+        }
+        setDisableLastBtn(false);
+        setDisableNextBtn(false);
+        
+        setPageNumber(pageNumber - 1);
+
+        setBlogCounterStart(blogCounterStart - blogCounterSteps); //changes the blog's start value to display
+        setBlogCounterEnd(blogCounterEnd - blogCounterSteps); //changes the blog's end value to display
+    }
 
     return (
         <div id="blogs-container">
             <div id="blogs">
                 <p>Showing {displayNBlogs.length} blogs</p>
-                {}
-                {displayNBlogs.map((blog) => (
-                    <>
-                        <BlogCard key={blog.id} blog={blog} />
-                        {/*<button onClick={() => ExpandBlog(blog.id)}>Show more for £19.95</button>*/}
-                    </>
-                ))}
+                {ShowBlogs()}
             </div>
             <p style={{marginBottom: 8}}>Page {pageNumber}</p>
             <div id="switch-page-container">
-                <button className="switch-page">{'<'} Last page</button>
-                <button className="switch-page">Next page {'>'}</button>
+                <button className="switch-page" disabled={disableLastBtn} onClick={() => LastPage()}>{'<'} Last page</button>
+                <button className="switch-page" disabled={disableNextBtn} onClick={() => NextPage()}>Next page {'>'}</button>
             </div>
         </div>
     )
