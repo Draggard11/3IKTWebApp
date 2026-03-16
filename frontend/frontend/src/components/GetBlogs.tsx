@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import type { Blog } from "./ShowBlogs";
 import { BlogCard } from "./ShowBlogs";
+import MakeComment from "./MakeComment";
 import '../styles/GetBlogs.css';
 
 import mockBlogs from './MockBlogs.json';

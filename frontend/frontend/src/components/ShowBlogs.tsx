@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import '../styles/ShowBlogs.css';
+import MakeComment from './MakeComment';
 
 export interface Blog {
     id: number;
@@ -36,6 +37,8 @@ export function BlogCard({ blog }: { blog: Blog }) {
                         <p style={{fontWeight: 100}}>{comment.text}</p>
                     </div>
                 ))}
+                <br />
+                <MakeComment />
             </div>
         )
     }
