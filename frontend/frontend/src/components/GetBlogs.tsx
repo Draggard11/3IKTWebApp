@@ -66,7 +66,7 @@ function GetBlogs() {
                 <p>Showing {displayNBlogs.length} blogs</p>
                 {ShowBlogs()}
             </div>
-            <p style={{marginBottom: 8}}>Page {pageNumber}</p>
+            <p style={{marginBottom: 8}}>Page {pageNumber} / {allBlogs.length / blogCounterSteps}</p>
             <div id="switch-page-container">
                 <button className="switch-page" disabled={disableLastBtn} onClick={() => LastPage()}>{'<'} Last page</button>
                 <button className="switch-page" disabled={disableNextBtn} onClick={() => NextPage()}>Next page {'>'}</button>
