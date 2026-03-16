@@ -1,24 +1,34 @@
-from domain import User, Blog, Comment
+from domain import User, Blog, Comment, db
 from flask import Flask, jsonify
 from flask_restful import Resource, Api
 from flask_cors import CORS
 import bcrypt
 
 app = Flask(__name__)
-CORS(app, origins=["http://localhost:5173"])
+# configure the SQLite database, relative to the app instance folder
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
+# initialize the app with the extension
+db.init_app(app)
 api = Api(app)
 
-@app.route("/", methods=["GET"])
-def home():
-    blogs = Blog.query.all()
-    return jsonify({"username": "bob", "blogs": [blog.to_dict() for blog in blogs]})
+@app.route("/api/blogs", methods=["GET"])
+def getBlogs():
+    # SELECT * FROM BLOG
+    # fra nederste rad til topp i forhold til hvilke blog som skal komme først
+    blog = db.get(Blog, 0)
+    return jsonify(Blog.query.all().to_dict())
 
-@app.route("/register")
-def register():
-    return "works"
+@app.route("/api/blog/<int:id>", methods=["GET"])
+def getBlogs(id):
+    return jsonify(db.get(Blog, id).to_dict())
+
+# app route med id
+# https://flask-sqlalchemy.readthedocs.io/en/stable/quickstart/ 
+def getUsername():
+    return jsonify()
 
 @app.route("/register", methods=["POST"])
-def register_user(username, password): # Does when you click register button
+def register_user():
     return "User(username, password)"
 
 def login_user(username, password): # Does when you click login button
