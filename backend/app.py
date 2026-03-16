@@ -22,10 +22,10 @@ def getBlogs():
 def getBlogs(id):
     return jsonify(db.get(Blog, id).to_dict())
 
-# app route med id
 # https://flask-sqlalchemy.readthedocs.io/en/stable/quickstart/ 
-def getUsername():
-    return jsonify()
+@app.route("/api/user/<int:id>", methods=["GET"])
+def getUsername(id):
+    return jsonify(db.get(User, id).to_dict())
 
 @app.route("/register", methods=["POST"])
 def register_user():
