@@ -10,7 +10,8 @@ api = Api(app)
 
 @app.route("/", methods=["GET"])
 def home():
-    return jsonify({"username": "bob"})
+    blogs = Blog.query.all()
+    return jsonify({"username": "bob", "blogs": [blog.to_dict() for blog in blogs]})
 
 @app.route("/register")
 def register():
