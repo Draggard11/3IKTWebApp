@@ -11,21 +11,23 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
 db.init_app(app)
 api = Api(app)
 
+with app.app_context():
+    db.create_all()
+
 @app.route("/api/blogs", methods=["GET"])
 def getBlogs():
     # SELECT * FROM BLOG
     # fra nederste rad til topp i forhold til hvilke blog som skal komme først
-    blog = db.get(Blog, 0)
-    return jsonify(Blog.query.all().to_dict())
+    return jsonify(Blog.query.all())
 
 @app.route("/api/blog/<int:id>", methods=["GET"])
-def getBlogs(id):
-    return jsonify(db.get(Blog, id).to_dict())
+def getBlog(id):
+    return jsonify(db.get(Blog, id))
 
 # https://flask-sqlalchemy.readthedocs.io/en/stable/quickstart/ 
 @app.route("/api/user/<int:id>", methods=["GET"])
 def getUsername(id):
-    return jsonify(db.get(User, id).to_dict())
+    return jsonify(db.get(User, id))
 
 @app.route("/register", methods=["POST"])
 def register_user():
