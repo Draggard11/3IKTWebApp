@@ -2,6 +2,7 @@ import { Routes, Route, BrowserRouter, NavLink } from "react-router";
 import "./styles/App.css";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
+import MakeBlogs from "./components/MakeBlogs"
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
             <NavLink to="/login"> Login/Register</NavLink>
           </nav>
         </div>
+        <MakeBlogs />
         <br /><br />
         <Routes>
           <Route path="/" element={<Home />} />
