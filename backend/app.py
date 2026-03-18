@@ -27,7 +27,8 @@ def getBlog(id):
 # https://flask-sqlalchemy.readthedocs.io/en/stable/quickstart/ 
 @app.route("/api/user/<int:id>", methods=["GET"])
 def getUsername(id):
-    return jsonify(db.get(User, id))
+    user = db.get_or_404(User, id)
+    return jsonify({"username": user.username})
 
 @app.route("/register", methods=["POST"])
 def register_user():
@@ -56,6 +57,7 @@ def __checkPassword(self, password: str) -> bool:
 
 def main():
     app.run()
+    
 
 if __name__ == "__main__":
     main()
