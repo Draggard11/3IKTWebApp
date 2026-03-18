@@ -13,6 +13,13 @@ api = Api(app)
 
 with app.app_context():
     db.create_all()
+    db.drop_all()
+    db.create_all()
+
+    user = User("bob", "pass123")
+
+    db.session.add(user)
+    db.session.commit()
 
 @app.route("/api/blogs", methods=["GET"])
 def getBlogs():

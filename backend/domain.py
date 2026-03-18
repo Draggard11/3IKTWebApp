@@ -40,7 +40,7 @@ class User(db.Model): # Bob
     comments: Mapped[List["Comment"]] = relationship(cascade="all, delete-orphan", back_populates="commenter")
     blogs: Mapped[List["Blog"]] = relationship(cascade="all, delete-orphan", back_populates="madeBy")
 
-    def __init__(self, id: str, username: str, password):
+    def __init__(self, username: str, password):
         """Initialize a User with id, username, and password.
         
         Args:
@@ -48,7 +48,6 @@ class User(db.Model): # Bob
             username (str): The user's username
             password (str): The user's password
         """
-        self.id = id
         self.username = username
         self.password = password
 
@@ -177,6 +176,11 @@ class User(db.Model): # Bob
         self.password = password
 
 # endregion
+
+# region Override methods
+
+# endregion
+
 # endregion
 
 # region Blog class
