@@ -21,9 +21,16 @@ class test_domain(unittest.TestCase):
     def test_user_make_blog_post(self): # user functionality
         user = User("bob", "pass123")
         blog = user.makeBlogPost("muldvarp", "content")
+        self.session.add(user)
+        self.session.commit()
+        assert user.id == 1 # test for id
         assert isinstance(blog, Blog)
         assert blog in user.blogs
         assert user == blog.madeBy
+        user2 = User("Alice", "pass123")
+        self.session.add(user2)
+        self.session.commit()
+        assert user2.id == 2 # test for id again
 
     def test_user_edit_blog_post(self): # user functionality
         user = User("dylan", "823y48723bv7yo4htuhrilhgdhwv4t3")
