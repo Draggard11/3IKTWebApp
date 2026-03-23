@@ -3,12 +3,7 @@ const MakeBlogs = () => {
     
     return (
         <>
-        <h1>
-            Hei
-        </h1>
-        <form>
-            
-        </form>
+        
         </>
     )
 }
