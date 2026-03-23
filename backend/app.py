@@ -5,6 +5,7 @@ from flask_cors import CORS
 import bcrypt
 
 app = Flask(__name__)
+CORS(app, origins=["http://localhost:5173"])
 # configure the SQLite database, relative to the app instance folder
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
 # initialize the app with the extension
@@ -23,6 +24,12 @@ with app.app_context():
 
 @app.route("/api/blogs", methods=["GET"])
 def getBlogs():
+    # SELECT * FROM BLOG
+    # fra nederste rad til topp i forhold til hvilke blog som skal komme først
+    return jsonify(Blog.query.all())
+
+@app.route("/api/blog/<int:blogid>/comment/<int:id>", methods=["GET"])
+def getComment(blogid, id):
     # SELECT * FROM BLOG
     # fra nederste rad til topp i forhold til hvilke blog som skal komme først
     return jsonify(Blog.query.all())

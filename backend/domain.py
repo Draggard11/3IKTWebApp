@@ -34,7 +34,7 @@ class User(db.Model): # Bob
     """
     __tablename__ = "user"
 
-    id: Mapped[int] = mapped_column(primary_key=True) # class attribute
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True) # class attribute
     username: Mapped[str] = mapped_column(unique=True)
     password: Mapped[str]
     comments: Mapped[List["Comment"]] = relationship(cascade="all, delete-orphan", back_populates="commenter")
@@ -204,7 +204,7 @@ class Blog(db.Model):
     """
     __tablename__ = "blog"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True) # class attribute
     title: Mapped[str]
     text: Mapped[str]
     madeBy: Mapped["User"] = relationship(back_populates="blogs")
@@ -328,7 +328,7 @@ class Comment(db.Model):
     """
     __tablename__ = "comment"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True) # class attribute
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     commenter: Mapped["User"] = relationship(back_populates="comments")
     text: Mapped[str]
