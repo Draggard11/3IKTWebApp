@@ -1,9 +1,15 @@
 :root {
-    --mw: 50%;
+    font-family: 'Monocraft';
 }
 
 body {
     margin: 0;
+}
+
+#showing-n-blogs {
+    margin: 12px 12px;
+    align-self: center;
+    font-size: 18px;
 }
 
 #blogs-container {
@@ -11,14 +17,14 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: var(--mw);
+    width: 100%;
+    height: fit-content;
 }
 
 #blogs {
     flex: 1;
     margin-right: 12px;
     margin-left: 12px;
-    width: 100%;
 }
 
 #switch-page-container {

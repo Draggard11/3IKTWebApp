@@ -23,7 +23,7 @@ function Login() {
           <label>Password: </label>
           <input type='password' name="password" />
           <br /><br />
-          <label>Last date traveled to Vietnam: </label>
+          <label>Last time traveled to Vietnam: </label>
           <input type='datetime-local' name="traveledToVietnam" />
           <br /><br />
           <button type="submit">{login ? 'Login' : 'Register'}</button>

@@ -63,8 +63,8 @@ function GetBlogs() {
 
     return (
         <div id="blogs-container">
+            <p id="showing-n-blogs">Showing {displayNBlogs.length} blogs</p>
             <div id="blogs">
-                <p>Showing {displayNBlogs.length} blogs</p>
                 {ShowBlogs()}
             </div>
             <p style={{marginBottom: 8}}>Page {pageNumber} / {allBlogs.length / blogCounterSteps}</p>

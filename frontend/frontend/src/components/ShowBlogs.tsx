@@ -1,5 +1,7 @@
 import { useState } from 'react';
+
 import '../styles/ShowBlogs.css';
+
 import MakeComment from './MakeComment';
 
 export interface Blog {
@@ -19,37 +21,42 @@ export interface Comment {
 export function BlogCard({ blog }: { blog: Blog }) {
 
     const [canShowMoreText, setCanShowMoreText] = useState<boolean>(false);
-
     const [showComments, setShowComments] = useState<boolean>(false);
 
     const Comments = () => {
         return (
-            <div id='comment-section'>
-                {blog.comments.map((comment) => (
-                    <div id='comments-row'>
-                        <h4>{comment.commenter} - 
-                            <span style={{borderColor: 'yellow'}}>
-                                <span style={{color: 'transparent', userSelect: 'none',}}>_</span>
-                                    {comment.stars}
-                                <span style={{color: 'transparent', userSelect: 'none'}}>_</span>
-                            </span>
-                        </h4>
-                        <p style={{fontWeight: 100}}>{comment.text}</p>
-                    </div>
-                ))}
-                <br />
-                <MakeComment />
+            <div id='comments-container'>
+                <div id='comment-section'>
+                    {blog.comments.map((comment) => (
+                        <div id='comments-row'>
+                            <h4>{comment.commenter}
+                                <span className='comments-row-stars'>
+                                    {"★ ".repeat(comment.stars)}
+                                </span>
+                            </h4>
+                            <p style={{fontWeight: 100}}>{comment.text}</p>
+                        </div>
+                    ))}
+                    <br />
+                </div>
+                <div id='make-comment-container'>
+                    <MakeComment />
+                </div>
             </div>
         )
     }
     
     return (
-        <div id="blog-title-card">
-          <h2>{blog.title}</h2>
-            <p id='blog-text'>{!canShowMoreText ? blog.text.slice(0, 50) + '...' : blog.text}
-                <span style={{color: 'transparent', userSelect: 'none'}}>__</span>
-                <button key={blog.id} onClick={() => setCanShowMoreText(!canShowMoreText)}>{canShowMoreText ? 'Hide text' : 'Show text'}</button>
-            </p>
+        <div style={{width: canShowMoreText ? '50%' : 'fit-content'}} id="blog-card-container">
+            <div id='blog-title-and-text-container'>
+                <h2 key={`title-${blog.title}`} id='blog-title'>{blog.title}</h2>
+                <div key={`container-${blog.id}`} id='blog-text-container'>
+                    <p key={`text-${blog.id}`} id='blog-text'>{!canShowMoreText ? blog.text.slice(0, 50) + '...' : blog.text}
+                        <span style={{color: 'transparent', userSelect: 'none'}}>__</span>
+                        <button key={blog.id} onClick={() => setCanShowMoreText(!canShowMoreText)}>{canShowMoreText ? 'Hide text' : 'Show text'}</button>
+                    </p>
+                </div>
+            </div>
             <div id='comment-section-container'>
                 <p style={{fontWeight:"bold", fontSize: 16}}>
                     Comments:

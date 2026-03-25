@@ -1,5 +1,8 @@
 import { Routes, Route, BrowserRouter, NavLink } from "react-router";
-import "./styles/App.css";
+
+import './styles/App.css';
+import './styles/palette.css';
+
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 
@@ -8,7 +11,7 @@ function App() {
     <>
       <BrowserRouter>
         <div id="container">
-          <h1 style={{fontSize: 38}}>Vietnamese Blog</h1>
+          <h1 style={{fontSize: 38}}>Đừng Nước Mắm</h1>
           <nav id="navlink">
             <NavLink to="/"> Home</NavLink> |
             <NavLink to="/login"> Login/Register</NavLink>

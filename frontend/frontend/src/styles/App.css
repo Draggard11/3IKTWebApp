@@ -1,13 +1,29 @@
+@font-face {
+    font-family: Barrio;
+    src: url(../fonts/Barrio/Barrio-Regular.ttf);
+}
+
+@font-face {
+    font-family: 'Monocraft';
+    src: url('https://cdn.jsdelivr.net/gh/IdreesInc/Monocraft@main/dist/Monocraft-ttf/Monocraft.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 :root {
-    --light-bg-color: #E4E4DE;
-    font-family: 'arial';
+    --light-bg-color: #0a0705;
+    font-family: 'Monocraft';
+}
+
+p, h4, h3, h2, h1 {
+    font-family: 'Monocraft';
 }
 
 body {
     /*background: url(../styles/governor-wes-moore-official-portrait.JPG);
     background-repeat: repeat;
     background-size: 100% 30%;*/
-    background-color: cadetblue;
+    background-color: #fcf9f7;
 }
 
 #container {
