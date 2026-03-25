@@ -10,9 +10,12 @@
     font-style: normal;
 }
 
+#root {
+    font-family: 'Monocraft';
+}
+
 :root {
     --light-bg-color: #0a0705;
-    font-family: 'Monocraft';
 }
 
 p, h4, h3, h2, h1 {

@@ -16,6 +16,7 @@ export default function MakeComment() {
                 <input id="comment-text-field" type="text" placeholder="Ăn khi ngồi luôn" />
                 <br />
                 <input id="comment-range-stars" type="range" min={1} max={5} />
+                <br />
                 <input id="comment-submit" type="submit" value="Send" />
             </form>
         </div>
