@@ -12,10 +12,10 @@ export default function MakeComment() {
 
     async function postComment() {
         try {
-            const response = await fetch('http://127.0.0.1:5000/api/comment', {
+            const response = await fetch('http://127.0.0.1:5000/api/blog/0/comment', {
                 method: 'POST',
                 headers: {
-                    'content-type': 'application/json'
+                    'content-type':  'application/json'
                 },
                 body: JSON.stringify({
                     commenter: commenter,
@@ -39,6 +39,7 @@ export default function MakeComment() {
         // first handle request
         // get feedback from backend and report to user
         // refresh page
+        postComment();
     }
     return (
         <div id="make-comment-container">
