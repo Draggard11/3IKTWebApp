@@ -35,6 +35,7 @@ export function BlogCard({ blog }: { blog: Blog }) {
                                     {'★ '.repeat(comment.stars)}
                                 </span>
                             </div>
+                            <div className='seperator' />
                             <p style={{ fontWeight: 50, fontSize: 14 }}>{comment.text}</p>
                         </div>
                     ))}
