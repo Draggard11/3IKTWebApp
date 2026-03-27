@@ -34,13 +34,13 @@ class User(db.Model): # Bob
     """
     __tablename__ = "user"
 
-    id: Mapped[int] = mapped_column(primary_key=True) # class attribute
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True) # class attribute
     username: Mapped[str] = mapped_column(unique=True)
     password: Mapped[str]
     comments: Mapped[List["Comment"]] = relationship(cascade="all, delete-orphan", back_populates="commenter")
     blogs: Mapped[List["Blog"]] = relationship(cascade="all, delete-orphan", back_populates="madeBy")
 
-    def __init__(self, id: str, username: str, password):
+    def __init__(self, username: str, password):
         """Initialize a User with id, username, and password.
         
         Args:
@@ -48,7 +48,6 @@ class User(db.Model): # Bob
             username (str): The user's username
             password (str): The user's password
         """
-        self.id = id
         self.username = username
         self.password = password
 
@@ -177,6 +176,11 @@ class User(db.Model): # Bob
         self.password = password
 
 # endregion
+
+# region Override methods
+
+# endregion
+
 # endregion
 
 # region Blog class
@@ -200,7 +204,7 @@ class Blog(db.Model):
     """
     __tablename__ = "blog"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True) # class attribute
     title: Mapped[str]
     text: Mapped[str]
     madeBy: Mapped["User"] = relationship(back_populates="blogs")
@@ -324,7 +328,7 @@ class Comment(db.Model):
     """
     __tablename__ = "comment"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True) # class attribute
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     commenter: Mapped["User"] = relationship(back_populates="comments")
     text: Mapped[str]

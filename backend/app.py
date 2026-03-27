@@ -1,4 +1,4 @@
-from domain import User, Blog, Comment
+from domain import User, Blog, Comment, db
 from flask import Flask, jsonify
 from flask_restful import Resource, Api
 from flask_cors import CORS
@@ -6,18 +6,46 @@ import bcrypt
 
 app = Flask(__name__)
 CORS(app, origins=["http://localhost:5173"])
+# configure the SQLite database, relative to the app instance folder
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
+# initialize the app with the extension
+db.init_app(app)
 api = Api(app)
 
-@app.route("/", methods=["GET"])
-def home():
-    return jsonify({"username": "bob"})
+with app.app_context():
+    db.create_all()
+    db.drop_all()
+    db.create_all()
 
-@app.route("/register")
-def register():
-    return "works"
+    user = User("bob", "pass123")
+
+    db.session.add(user)
+    db.session.commit()
+
+@app.route("/api/blogs", methods=["GET"])
+def getBlogs():
+    # SELECT * FROM BLOG
+    # fra nederste rad til topp i forhold til hvilke blog som skal komme først
+    return jsonify(Blog.query.all())
+
+@app.route("/api/blog/<int:blogid>/comment/<int:id>", methods=["GET"])
+def getComment(blogid, id):
+    # SELECT * FROM BLOG
+    # fra nederste rad til topp i forhold til hvilke blog som skal komme først
+    return jsonify(Blog.query.all())
+
+@app.route("/api/blog/<int:id>", methods=["GET"])
+def getBlog(id):
+    return jsonify(db.get(Blog, id))
+
+# https://flask-sqlalchemy.readthedocs.io/en/stable/quickstart/ 
+@app.route("/api/user/<int:id>", methods=["GET"])
+def getUsername(id):
+    user = db.get_or_404(User, id)
+    return jsonify({"username": user.username})
 
 @app.route("/register", methods=["POST"])
-def register_user(username, password): # Does when you click register button
+def register_user():
     return "User(username, password)"
 
 def login_user(username, password): # Does when you click login button
@@ -43,6 +71,7 @@ def __checkPassword(self, password: str) -> bool:
 
 def main():
     app.run()
+    
 
 if __name__ == "__main__":
     main()
