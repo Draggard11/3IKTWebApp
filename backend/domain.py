@@ -306,7 +306,7 @@ class Blog(db.Model):
         return hash((self.title, self.madeBy))
     
     def __str__(self):
-        return f"Blog(title='{self.title}', author={self.madeBy}, published={self.publishedAt.strftime('%Y-%m-%d')})"
+        return f"Blog(title='{self.title}', author={self.madeBy}, published={self.publishedAt})"
 # endregion
 # endregion
 

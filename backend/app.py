@@ -1,5 +1,5 @@
 from domain import User, Blog, Comment, db
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_restful import Resource, Api
 from flask_cors import CORS
 import bcrypt
@@ -18,8 +18,10 @@ with app.app_context():
     db.create_all()
 
     user = User("bob", "pass123")
+    blog = user.makeBlogPost("My First Blog", "This is the content of my first blog post.")
 
     db.session.add(user)
+    db.session.add(blog)
     db.session.commit()
 
 @app.route("/api/blogs", methods=["GET"])
@@ -54,8 +56,21 @@ def login_user(username, password): # Does when you click login button
 def make_blog_post(user, title, text): # Does when you click create blog post button
     pass
 
-def make_comment(user, blog, text, stars): # Does when you click create comment button
-    pass
+@app.route("/api/blog/<int:id>/comment", methods=["POST"])
+def make_comment(id): # Does when you click create comment button
+    data = request.get_json()
+    if data == None:
+        return jsonify({"error": "Invalid JSON data"}), 400
+    try:
+        commenter = db.get_or_404(User, 1)
+        text = data["text"]
+        stars = data["stars"]
+        blog = db.get_or_404(Blog, 1)
+        comment = Comment(commenter, blog)
+        comment.post(text, stars)
+        return jsonify({"text": text, "stars": stars}), 200
+    except:
+        return jsonify({"error": "errored"}), 400
 
 # region Private methods
 
