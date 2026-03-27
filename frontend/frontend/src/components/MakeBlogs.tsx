@@ -12,7 +12,7 @@ const MakeBlogs = () => {
                     Edit your post:
                     <textarea 
                         name="postContent"
-                        defaultValue="Ông đang nghĩ gì vậy?"
+                        placeholder="Ông đang nghĩ gì vậy?"
                         rows={4}
                         cols={40}
                     />
