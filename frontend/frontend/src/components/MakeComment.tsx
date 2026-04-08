@@ -1,4 +1,4 @@
-import { useState } from "react"
+import {useEffect, useState} from "react"
 import type { Comment } from "./ShowBlogs"
 import GetBlogs from "./GetBlogs";
 
@@ -8,7 +8,7 @@ export default function MakeComment() {
 
     const [commenter, setCommenter] = useState<string>();
     const [text, setText] = useState<string>();
-    const [stars, setStars] = useState<number>();
+    const [stars, setStars] = useState<number | undefined>();
 
     async function postComment() {
         try {
@@ -37,7 +37,17 @@ export default function MakeComment() {
     }
     function handleSubmit() {
         // first handle request
+        if (text === undefined) {
+            alert("Chicken.");
+            return;
+        }
+        alert(
+            `Text: ${text}\n
+            Stars: ${stars === undefined ? "No rating given" : stars}`
+        );
         // get feedback from backend and report to user
+
+
         // refresh page
         postComment();
     }
@@ -53,7 +63,7 @@ export default function MakeComment() {
                 <input 
                 id="comment-range-stars" 
                 type="range" 
-                min={1} max={5} 
+                min={1} max={5}
                 onChange={(e) => setStars(Number(e.target.value))}/>
                 <input id="comment-submit" type="submit" value="Send" />
             </form>
