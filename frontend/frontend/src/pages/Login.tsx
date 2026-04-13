@@ -1,13 +1,21 @@
 import { useState } from 'react';
+import {registerUser, loginUser} from '../services/api';
 import '../styles/Login.css';
 
 function Login() {
 
   function sign(formData:any) {
-    const email = formData.get("email");
+    const username = formData.get("username");
     const password = formData.get("password");
-    if (!email || !password) {return;}
-    alert(`${email} & ${password}`);
+    if (!username || !password) {
+      alert("please enter a valid username and password")
+      return;
+    }
+    if (login) {
+      loginUser(username, password)
+    } else {
+      registerUser(username, password)
+    }
   }
 
   const [login, setLogin] = useState<boolean>(true);
@@ -17,8 +25,8 @@ function Login() {
         <h1 id='heading'>Đăng nhập</h1>
         <button id='account' onClick={() => setLogin(!login)}>{!login ? 'Already have an account? Sign in' : `Don't have an account? Sign up`}</button>
         <form action={sign} id="login-or-register">
-          <label>Email: </label>
-          <input type='email' name="email" />
+          <label>Username: </label>
+          <input type='username' name="username" />
           <br /><br />
           <label>Password: </label>
           <input type='password' name="password" />

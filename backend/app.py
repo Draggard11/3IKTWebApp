@@ -46,11 +46,37 @@ def getUsername(id):
     user = db.get_or_404(User, id)
     return jsonify({"username": user.username})
 
-@app.route("/register", methods=["POST"])
+@app.route("/api/register", methods=["POST"])
 def register_user():
-    return "User(username, password)"
+    data = request.get_json()
+    if data == None:
+        return jsonify({"error": "Invalid JSON data"}), 400
+    try:
+        username = data["username"]
+        print(username)
+        password = data["password"]
+        print(password)
+        # check if username already exists, does not work as well
+        if (db.session.execute(db.select(User).filter_by(username=username)).scalar_one_or_none() != None):
+            # just login the user instead of returning an error
+            return jsonify({"redirect", "/api/login"}), 300
+        print(username)
+        user = User(username, password)
+        print(user.username)
+        db.session.add(user)
+        db.session.commit()
+        # resp = make_response('Setting the cookie') 
+        # resp.set_cookie('id', user.id)
+    except:
+        return jsonify({"error": "failed to update database"}), 400
+    # add cookies
+    
+    return jsonify({"username": user.username}), 201
 
-def login_user(username, password): # Does when you click login button
+@app.route("/api/login", methods=["POST"])
+def login_user(): # Does when you click login button
+
+    user = db.one_or_404(db.select(User).filter_by(username=username))
     pass
 
 def make_blog_post(user, title, text): # Does when you click create blog post button
@@ -73,7 +99,7 @@ def make_comment(id): # Does when you click create comment button
         return jsonify({"error": "errored"}), 400
 
 # region Private methods
-
+# does not work 
 def __savePassword(self, password: str) -> str:
     return bcrypt.hashpw(password, bcrypt.gensalt())
 
