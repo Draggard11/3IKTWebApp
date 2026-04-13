@@ -88,12 +88,15 @@ def make_comment(id): # Does when you click create comment button
     if data == None:
         return jsonify({"error": "Invalid JSON data"}), 400
     try:
+        # maybe make it possible for anonymous posts
         commenter = db.get_or_404(User, 1)
         text = data["text"]
         stars = data["stars"]
         blog = db.get_or_404(Blog, 1)
         comment = Comment(commenter, blog)
         comment.post(text, stars)
+        db.session.add(comment)
+        db.session.commit()
         return jsonify({"text": text, "stars": stars}), 200
     except:
         return jsonify({"error": "errored"}), 400
