@@ -9,6 +9,11 @@ import MakeBlogs from "./components/MakeBlogs"
 import GetUsername from "./components/GetUsername";
 
 function App() {
+
+  const logout = () => {
+    alert("Not logged out");
+  }
+
   return (
     <>
       <BrowserRouter>
@@ -16,8 +21,9 @@ function App() {
           <h1 style={{fontSize: 38}}>Đừng Nước Mắm</h1>
           <nav id="navlink">
             <NavLink to="/"> Home</NavLink> |
-            <NavLink to="/login"> Login/Register</NavLink>
-            <a><GetUsername /></a>
+            <NavLink to="/login"> Login/Register</NavLink> |
+            <a> <GetUsername /></a> |
+            <button onClick={() => logout()}> Logout</button>
           </nav>
           <h1 style={{fontSize: 38}}>Vietnamese Blog</h1>
         </div>
