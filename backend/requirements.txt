@@ -2,5 +2,7 @@ pytest
 coverage
 sqlalchemy
 Flask
-bcrypt
+Flask-bcrypt
 Flask-SQLAlchemy
+Flask-restful
+Flask-cors

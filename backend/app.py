@@ -2,7 +2,7 @@ from domain import User, Blog, Comment, db
 from flask import Flask, jsonify, request
 from flask_restful import Resource, Api
 from flask_cors import CORS
-import bcrypt
+from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
 CORS(app, origins=["http://localhost:5173"])
@@ -10,6 +10,7 @@ CORS(app, origins=["http://localhost:5173"])
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
 # initialize the app with the extension
 db.init_app(app)
+bcrypt = Bcrypt(app)
 api = Api(app)
 
 with app.app_context():
@@ -53,16 +54,10 @@ def register_user():
         return jsonify({"error": "Invalid JSON data"}), 400
     try:
         username = data["username"]
-        print(username)
         password = data["password"]
-        print(password)
+        nps = __savePassword(password)
         # check if username already exists, does not work as well
-        if (db.session.execute(db.select(User).filter_by(username=username)).scalar_one_or_none() != None):
-            # just login the user instead of returning an error
-            return jsonify({"redirect", "/api/login"}), 300
-        print(username)
-        user = User(username, password)
-        print(user.username)
+        user = User(username,password)
         db.session.add(user)
         db.session.commit()
         # resp = make_response('Setting the cookie') 
@@ -103,13 +98,11 @@ def make_comment(id): # Does when you click create comment button
 
 # region Private methods
 # does not work 
-def __savePassword(self, password: str) -> str:
-    return bcrypt.hashpw(password, bcrypt.gensalt())
+def __savePassword(password: str):
+    return bcrypt.generate_password_hash(password).decode('utf-8')
 
-def __checkPassword(self, password: str) -> bool:
-    if bcrypt.checkpw(password, self.password):
-        return True
-    return False
+def __checkPassword(password: str, hashed_password: str) -> bool:
+    return bcrypt.check_password_hash(hashed_password, password)
 
 # endregion
 
