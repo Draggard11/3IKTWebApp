@@ -3,6 +3,7 @@ from flask import Flask, jsonify, request
 from flask_restful import Resource, Api
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
 app = Flask(__name__)
 CORS(app, origins=["http://localhost:5173"])
@@ -14,16 +15,19 @@ bcrypt = Bcrypt(app)
 api = Api(app)
 
 with app.app_context():
-    db.create_all()
     db.drop_all()
     db.create_all()
 
-    user = User("bob", bcrypt.generate_password_hash("pass123").decode('utf-8'))
-    blog = user.makeBlogPost("My First Blog", "This is the content of my first blog post.")
+    # Initial User Setup for testing
+    if not db.session.query(User).filter_by(username='bob').first():
+        user = User('bob', bcrypt.generate_password_hash(
+            "pass123").decode('utf-8'))
+        blog = user.makeBlogPost(
+            "My First Blog", "This is the content of my first blog post.")
+        db.session.add(user)
+        db.session.add(blog)
+        db.session.commit()
 
-    db.session.add(user)
-    db.session.add(blog)
-    db.session.commit()
 
 @app.route("/api/blogs", methods=["GET"])
 def getBlogs():
@@ -31,49 +35,61 @@ def getBlogs():
     # fra nederste rad til topp i forhold til hvilke blog som skal komme først
     return jsonify(Blog.query.all())
 
+
 @app.route("/api/blog/<int:blogid>/comment/<int:id>", methods=["GET"])
 def getComment(blogid, id):
     # SELECT * FROM BLOG
     # fra nederste rad til topp i forhold til hvilke blog som skal komme først
     return jsonify(Blog.query.all())
 
+
 @app.route("/api/blog/<int:id>", methods=["GET"])
 def getBlog(id):
     return jsonify(db.get(Blog, id))
 
-# https://flask-sqlalchemy.readthedocs.io/en/stable/quickstart/ 
+# https://flask-sqlalchemy.readthedocs.io/en/stable/quickstart/
+
+
 @app.route("/api/user/<int:id>", methods=["GET"])
 def getUsername(id):
     user = db.get_or_404(User, id)
     return jsonify({"username": user.username})
 
+
 @app.route("/api/register", methods=["POST"])
 def register_user():
     data = request.get_json()
-    if data == None:
-        return jsonify({"error": "Invalid JSON data"}), 400
+    # check that username and password exists
+    if data is None or "username" not in data or "password" not in data:
+        return jsonify({"error": "Invalid JSON data. Requires username and password."}), 400
+    username = data["username"]
+    password = data["password"]
+
+    if db.session.query(User).filter_by(username=username).first():
+        return jsonify({"error": "Username already exists"}), 409
+
     try:
-        username = data["username"]
-        password = data["password"]
+
         nps = __savePassword(password)
         # check if username already exists, does not work as well
-        user = User(username,password)
+        user = User(username, password)
         db.session.add(user)
         db.session.commit()
-        # resp = make_response('Setting the cookie') 
+        # resp = make_response('Setting the cookie')
         # resp.set_cookie('id', user.id)
     except:
         return jsonify({"error": "failed to update database"}), 400
     # add cookies
-    
+
     return jsonify({"username": user.username}), 201
 
+
 @app.route("/api/login", methods=["POST"])
-def login_user(): # Does when you click login button
+def login_user():  # Does when you click login button
     data = request.get_json()
     if data == None:
         return jsonify({"error": "Invalid JSON data"}), 400
-
+    
     username = data["username"]
     password = data["password"]
 
@@ -93,11 +109,13 @@ def login_user(): # Does when you click login button
 
     # user = db.one_or_404(db.select(User).filter_by(username=username))
 
-def make_blog_post(user, title, text): # Does when you click create blog post button
+
+def make_blog_post(user, title, text):  # Does when you click create blog post button
     pass
 
+
 @app.route("/api/blog/<int:id>/comment", methods=["POST"])
-def make_comment(id): # Does when you click create comment button
+def make_comment(id):  # Does when you click create comment button
     data = request.get_json()
     if data == None:
         return jsonify({"error": "Invalid JSON data"}), 400
@@ -116,18 +134,22 @@ def make_comment(id): # Does when you click create comment button
         return jsonify({"error": "errored"}), 400
 
 # region Private methods
-# does not work 
+# does not work
+
+
 def __savePassword(password: str):
     return bcrypt.generate_password_hash(password).decode('utf-8')
+
 
 def __checkPassword(password: str, hashed_password: str) -> bool:
     return bcrypt.check_password_hash(hashed_password, password)
 
 # endregion
 
+
 def main():
     app.run()
-    
+
 
 if __name__ == "__main__":
     main()
