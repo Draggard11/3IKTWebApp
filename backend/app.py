@@ -18,7 +18,7 @@ with app.app_context():
     db.drop_all()
     db.create_all()
 
-    user = User("bob", "pass123")
+    user = User("bob", bcrypt.generate_password_hash("pass123").decode('utf-8'))
     blog = user.makeBlogPost("My First Blog", "This is the content of my first blog post.")
 
     db.session.add(user)
@@ -70,9 +70,28 @@ def register_user():
 
 @app.route("/api/login", methods=["POST"])
 def login_user(): # Does when you click login button
+    data = request.get_json()
+    if data == None:
+        return jsonify({"error": "Invalid JSON data"}), 400
 
-    user = db.one_or_404(db.select(User).filter_by(username=username))
-    pass
+    username = data["username"]
+    password = data["password"]
+
+    if not username or not password:
+        return jsonify({"error": "Username and password are required"}), 400
+
+    user = db.session.query(User).filter_by(username=username).first()
+    
+    if not user:
+        return jsonify({"error": "User not registered"}), 400
+
+    if __checkPassword(password, user.password):
+        return jsonify({"login": "Login successful"}), 200
+
+    else:
+        return jsonify({"msg": "Invalid credentials"})
+
+    # user = db.one_or_404(db.select(User).filter_by(username=username))
 
 def make_blog_post(user, title, text): # Does when you click create blog post button
     pass
