@@ -12,9 +12,9 @@ function Login() {
       return;
     }
     if (login) {
-      loginUser(username, password)
+      loginUser(username, password);
     } else {
-      registerUser(username, password)
+      registerUser(username, password);
     }
   }
 

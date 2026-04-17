@@ -1,9 +1,5 @@
 import { useEffect, useState } from 'react';
 
-interface data {
-    username:string,
-}
-
 export default function GetUsername() {
     const [username, setUsername] = useState<String>("anonymous")
 
@@ -11,7 +7,7 @@ export default function GetUsername() {
         const fetchUsername = async () => {
             try {
                 const response = await fetch('http://127.0.0.1:5000/api/user/1'); //sqlite starter alltid på 1 ikke 0
-                const data = await response.json() as data;
+                const data = await response.json();
                 console.log(`Response's response: ${response}`);
                 setUsername(data.username)
             } catch (error) {
