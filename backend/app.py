@@ -8,10 +8,12 @@ from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identi
 app = Flask(__name__)
 CORS(app, origins=["http://localhost:5173"])
 # configure the SQLite database, relative to the app instance folder
+app.config["JWT_SECRET_KEY"] = "super-secret"  # Change this!
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
 # initialize the app with the extension
 db.init_app(app)
 bcrypt = Bcrypt(app)
+jwt = JWTManager(app)
 api = Api(app)
 
 jwt = JWTManager(app)
@@ -30,20 +32,20 @@ with app.app_context():
         db.session.add(blog)
         db.session.commit()
 
+@jwt.user_identity_loader
+def user_identity_lookup(user):
+    return user.id
+
+@jwt.user_lookup_loader
+def user_lookup_callback(_jwt_header, jwt_data):
+    identity = jwt_data["sub"]
+    return User.query.filter_by(id=identity).one_or_none()
 
 @app.route("/api/blogs", methods=["GET"])
 def getBlogs():
     # SELECT * FROM BLOG
     # fra nederste rad til topp i forhold til hvilke blog som skal komme først
     return jsonify(Blog.query.all())
-
-
-@app.route("/api/blog/<int:blogid>/comment/<int:id>", methods=["GET"])
-def getComment(blogid, id):
-    # SELECT * FROM BLOG
-    # fra nederste rad til topp i forhold til hvilke blog som skal komme først
-    return jsonify(Blog.query.all())
-
 
 @app.route("/api/blog/<int:id>", methods=["GET"])
 def getBlog(id):
@@ -52,8 +54,9 @@ def getBlog(id):
 # https://flask-sqlalchemy.readthedocs.io/en/stable/quickstart/
 
 
-@app.route("/api/user/<int:id>", methods=["GET"])
-def getUsername(id):
+@app.route("/api/user", methods=["GET"])
+@jwt_required()
+def getMyUsername():
     user = db.get_or_404(User, id)
     return jsonify({"username": user.username})
 
@@ -71,18 +74,12 @@ def register_user():
         return jsonify({"error": "Username already exists"}), 409
 
     try:
-
         nps = __savePassword(password)
-        # check if username already exists, does not work as well
-        user = User(username, password)
+        user = User(username, nps)
         db.session.add(user)
         db.session.commit()
-        # resp = make_response('Setting the cookie')
-        # resp.set_cookie('id', user.id)
     except:
         return jsonify({"error": "failed to update database"}), 400
-    # add cookies
-
     return jsonify({"username": user.username}), 201
 
 
@@ -104,7 +101,8 @@ def login_user():  # Does when you click login button
         return jsonify({"error": "User not registered"}), 400
 
     if __checkPassword(password, user.password):
-        return jsonify({"login": "Login successful"}), 200
+        access_token = create_access_token(identity=user)
+        return jsonify(username=username, access_token=access_token), 200
 
     else:
         return jsonify({"msg": "Invalid credentials"})
@@ -112,18 +110,20 @@ def login_user():  # Does when you click login button
     # user = db.one_or_404(db.select(User).filter_by(username=username))
 
 
+@jwt_required
 def make_blog_post(user, title, text):  # Does when you click create blog post button
     pass
 
 
 @app.route("/api/blog/<int:id>/comment", methods=["POST"])
+@jwt_required()
 def make_comment(id):  # Does when you click create comment button
     data = request.get_json()
     if data == None:
         return jsonify({"error": "Invalid JSON data"}), 400
     try:
         # maybe make it possible for anonymous posts
-        commenter = db.get_or_404(User, 1)
+        commenter = current_user
         text = data["text"]
         stars = data["stars"]
         blog = db.get_or_404(Blog, 1)
