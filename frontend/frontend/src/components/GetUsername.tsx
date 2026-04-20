@@ -6,7 +6,7 @@ export default function GetUsername() {
     useEffect(() => {
         const fetchUsername = async () => {
             try {
-                const response = await fetch('http://127.0.0.1:5000/api/user/1'); //sqlite starter alltid på 1 ikke 0
+                const response = await fetch('http://127.0.0.1:5000/api/user/');
                 const data = await response.json();
                 console.log(`Response's response: ${response}`);
                 setUsername(data.username)
@@ -14,7 +14,7 @@ export default function GetUsername() {
                 console.error('Error when fetching username: ', error);
             }
         }; fetchUsername();
-    }, []); //forhindrer at funksjonen kjører hver render
+    }, []);
 
     return (
         <>{username}</>

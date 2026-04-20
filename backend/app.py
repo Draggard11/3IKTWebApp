@@ -3,7 +3,7 @@ from flask import Flask, jsonify, request
 from flask_restful import Resource, Api
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, JWTManager
 
 app = Flask(__name__)
 CORS(app, origins=["http://localhost:5173"])
@@ -13,6 +13,8 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
 db.init_app(app)
 bcrypt = Bcrypt(app)
 api = Api(app)
+
+jwt = JWTManager(app)
 
 with app.app_context():
     db.drop_all()
