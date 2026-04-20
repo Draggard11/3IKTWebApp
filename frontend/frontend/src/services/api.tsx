@@ -34,8 +34,9 @@ export async function loginUser(username: string, password: string) {
             credentials: 'include',
             body: JSON.stringify({
                 username: username,
-                password: password
-            })
+                password: password,
+            }),
+            credentials: "include"
         })
 
         if (!response.ok) {
