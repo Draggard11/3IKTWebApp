@@ -14,7 +14,13 @@ function Login() {
     if (login) {
       loginUser(username, password);
     } else {
-      registerUser(username, password);
+      registerUser(username, password)
+      .then(() => {
+        alert(`Registered: ${registerUser}`);
+      })
+      .catch((err) => {
+        alert(`${err} :: ${registerUser}`);
+      })
     }
   }
 

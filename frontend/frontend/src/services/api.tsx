@@ -31,6 +31,7 @@ export async function loginUser(username: string, password: string) {
             headers: {
                 'content-type': 'application/json'
             },
+            credentials: 'include',
             body: JSON.stringify({
                 username: username,
                 password: password

@@ -3,13 +3,15 @@ from flask import Flask, jsonify, request
 from flask_restful import Resource, Api
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, JWTManager
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, JWTManager, set_access_cookies
 
 app = Flask(__name__)
-CORS(app, origins=["http://localhost:5173"])
+CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
 # configure the SQLite database, relative to the app instance folder
 app.config["JWT_SECRET_KEY"] = "super-secret"  # Change this!
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
+app.config["JWT_TOKEN_LOCATION"] = ["cookies"]   # ✅ look for JWT in cookies
+app.config["JWT_COOKIE_CSRF_PROTECT"] = False    # ✅ disable CSRF for now (enable in production)
 # initialize the app with the extension
 db.init_app(app)
 bcrypt = Bcrypt(app)
@@ -102,7 +104,10 @@ def login_user():  # Does when you click login button
 
     if __checkPassword(password, user.password):
         access_token = create_access_token(identity=user)
-        return jsonify(username=username, access_token=access_token), 200
+        response = jsonify(username=username)
+        set_access_cookies(response, access_token)  # ✅ sets JWT as a cookie
+        return response, 200
+        # return jsonify(username=username, access_token=access_token), 200
 
     else:
         return jsonify({"msg": "Invalid credentials"})

@@ -12,7 +12,7 @@ export default function MakeComment() {
 
     async function postComment() {
         try {
-            const response = await fetch('http://127.0.0.1:5000/api/blog/0/comment', {
+            const response = await fetch('http://127.0.0.1:5000/api/blog/1/comment', {
                 method: 'POST',
                 headers: {
                     'content-type':  'application/json'
