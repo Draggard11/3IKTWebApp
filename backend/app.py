@@ -58,7 +58,7 @@ def getBlog(id):
 @jwt_required()
 def getMyUsername():
     user = db.get_or_404(User, id)
-    return jsonify({"username": user.username})
+    return jsonify(username=current_user.username)
 
 
 @app.route("/api/register", methods=["POST"])
