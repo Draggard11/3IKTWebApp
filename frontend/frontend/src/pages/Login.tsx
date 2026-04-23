@@ -4,23 +4,26 @@ import '../styles/Login.css';
 
 function Login() {
 
-  function sign(formData:any) {
+  async function sign(formData:any) {
+
     const username = formData.get("username");
     const password = formData.get("password");
+
     if (!username || !password) {
       alert("please enter a valid username and password")
       return;
     }
-    if (login) {
-      loginUser(username, password);
-    } else {
-      registerUser(username, password)
-      .then(() => {
-        alert(`Registered: ${registerUser}`);
-      })
-      .catch((err) => {
-        alert(`${err} :: ${registerUser}`);
-      })
+    try {
+        if (login) {
+            await loginUser(username, password);
+            alert(`Welcome back, ${username}`);
+        } else {
+            await registerUser(username, password);
+            alert("Registration successful. Please log in.");
+        }
+    } catch (err: any) {
+        // UI ERROR HANDLING: Catch the error thrown by api.tsx
+        alert(err.message); 
     }
   }
 

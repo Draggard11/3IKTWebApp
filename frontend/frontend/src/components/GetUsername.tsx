@@ -19,6 +19,8 @@ export default function GetUsername() {
         return "none"
     };
 
+    const csrfToken = getCookie("csrf_access_token");
+
     useEffect(() => {
         const fetchUsername = async () => {
             try {
@@ -26,7 +28,7 @@ export default function GetUsername() {
                     method: "GET",
                     credentials: "include",
                     headers: {
-                        "X-CSRF-TOKEN": getCookie("csrf_access_token"),
+                        ...(csrfToken && { "X-CSRF-TOKEN": csrfToken }),
                     },
                 });
                 const data = await response.json();

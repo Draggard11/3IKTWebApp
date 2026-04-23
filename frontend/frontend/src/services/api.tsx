@@ -19,34 +19,29 @@ export async function registerUser(username: string, password: string) {
     } catch (err) {
         return err
     } finally {
-        // 
+        //
     }
 }
 
 
 export async function loginUser(username: string, password: string) {
-    try {
-        const response = await fetch('http://127.0.0.1:5000/api/login', {
-            method: 'POST',
-            headers: {
-                'content-type': 'application/json'
-            },
-            credentials: 'include',
-            body: JSON.stringify({
-                username: username,
-                password: password,
-            }),
-            credentials: "include"
-        })
 
-        if (!response.ok) {
-            throw new Error('failed to post comment')
-        }
+    const response = await fetch('http://127.0.0.1:5000/api/login', {
+        method: 'POST',
+        headers: {
+            'content-type': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+            username: username,
+            password: password,
+        }),
+    })
 
-        return response
-    } catch (err) {
-        // give error message to user
-    } finally {
-        // 
+    if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Login failed');
     }
+
+    return await response.json();
 }
