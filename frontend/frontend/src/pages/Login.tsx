@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { forwardRef, useState } from 'react';
 import {registerUser, loginUser} from '../services/api';
 import '../styles/Login.css';
 
@@ -13,19 +13,25 @@ function Login() {
       alert("please enter a valid username and password")
       return;
     }
-    try {
         if (login) {
-            await loginUser(username, password);
-            alert(`Welcome back, ${username}`);
+            loginUser(username, password).then(() => {
+              alert(`Welcome back, ${username}`);
+            }, (reason) => {
+              alert(`Failed login, ${reason}`);
+            });
         } else {
-            await registerUser(username, password);
-            alert("Registration successful. Please log in.");
+            registerUser(username, password).then(() => {
+              // if registration successful try to login
+              loginUser(username, password).then(() => {
+                alert('Welcome back, '+ username);
+              }, (reason) => {
+                alert('registration successful, please log in')
+              });
+            }, (reason) => {
+              alert(`Failed registration, ${reason}`);
+            });
+          }
         }
-    } catch (err: any) {
-        // UI ERROR HANDLING: Catch the error thrown by api.tsx
-        alert(err.message); 
-    }
-  }
 
   const [login, setLogin] = useState<boolean>(true);
 
