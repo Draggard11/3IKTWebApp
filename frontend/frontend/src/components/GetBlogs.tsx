@@ -1,13 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import type { Blog } from "./ShowBlogs";
 import { BlogCard } from "./ShowBlogs";
-import MakeComment from "./MakeComment";
 import '../styles/GetBlogs.css';
 
 import mockBlogs from './MockBlogs.json';
 
 function GetBlogs() {
-    const [allBlogs, setAllBlogs] = useState<Blog[]>(mockBlogs);
+    let allBlogs: Blog[] = mockBlogs;
 
     const blogCounterSteps = 10;
     const [blogCounterStart, setBlogCounterStart] = useState<number>(0);
