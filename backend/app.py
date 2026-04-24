@@ -3,8 +3,9 @@ from flask import Flask, jsonify, request
 from flask_restful import Resource, Api
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, JWTManager, set_access_cookies, current_user
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, JWTManager, set_access_cookies, current_user, unset_jwt_cookies
 import os
+from datetime import timedelta
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -15,17 +16,19 @@ app.config["JWT_SECRET_KEY"] = "super-secret"  # Change this!
 app.config["JWT_COOKIE_CSRF_PROTECT"] = True
 app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
 app.config["JWT_VERIFY_SUB"] = False
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(days=30)
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'project.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config["JWT_TOKEN_LOCATION"] = ["cookies"]   # ✅ look for JWT in cookies
-app.config["JWT_COOKIE_CSRF_PROTECT"] = False    # ✅ disable CSRF for now (enable in production)
+
+# app.config["JWT_COOKIE_SAMESITE"] = "Lax"
+app.config["JWT_COOKIE_SECURE"] = False  # True in production with HTTPS
+
 # initialize the app with the extension
 db.init_app(app)
 bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
 api = Api(app)
-
-jwt = JWTManager(app)
 
 with app.app_context():
     db.drop_all()
@@ -120,6 +123,13 @@ def login_user():  # Does when you click login button
     # user = db.one_or_404(db.select(User).filter_by(username=username))
 
 
+@app.route("/api/logout", methods=["POST"])
+def logout():
+    response = jsonify({"msg": "Logged out"})
+    unset_jwt_cookies(response)
+    return response, 200
+
+
 @jwt_required
 def make_blog_post(user, title, text):  # Does when you click create blog post button
     pass
@@ -136,7 +146,7 @@ def make_comment(id):  # Does when you click create comment button
         commenter = current_user
         text = data["text"]
         stars = data["stars"]
-        blog = db.get_or_404(Blog, 1)
+        blog = db.get_or_404(Blog, id)
         comment = Comment(commenter, blog)
         comment.post(text, stars)
         db.session.add(comment)

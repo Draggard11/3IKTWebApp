@@ -1,5 +1,5 @@
 import { forwardRef, useState } from 'react';
-import {registerUser, loginUser} from '../services/api';
+import {registerUser, loginUser} from '../services/user';
 import '../styles/Login.css';
 
 function Login() {
