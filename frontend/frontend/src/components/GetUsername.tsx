@@ -1,24 +1,20 @@
 import { useEffect, useState } from 'react';
 
 
+function getCookie(name: string) : string {
+    const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) {
+            const ret = parts.pop()?.split(";").shift();
+            if (ret) {
+                return ret
+            }
+        }
+    return ""
+}
 
 export default function GetUsername() {
     const [username, setUsername] = useState<string>("anonymous");
-
-    const getCookie = (name) => {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) {
-            if (parts != undefined) {
-                const ret = parts.pop() 
-                if (ret != undefined) {
-                    return ret.split(';').shift();
-                }
-            }
-        }
-        return "none"
-    };
-
     const csrfToken = getCookie("csrf_access_token");
 
     useEffect(() => {
@@ -28,7 +24,7 @@ export default function GetUsername() {
                     method: "GET",
                     credentials: "include",
                     headers: {
-                        ...(csrfToken && { "X-CSRF-TOKEN": csrfToken }),
+                        "X-CSRF-TOKEN": csrfToken,
                     },
                 });
                 const data = await response.json();

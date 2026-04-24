@@ -25,7 +25,6 @@ export async function registerUser(username: string, password: string) {
 
 
 export async function loginUser(username: string, password: string) {
-
     const response = await fetch('http://127.0.0.1:5000/api/login', {
         method: 'POST',
         headers: {
