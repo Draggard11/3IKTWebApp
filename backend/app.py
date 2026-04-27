@@ -34,7 +34,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(
 )
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-app.config["JWT_COOKIE_SAMESITE"] = "Lax"
+# app.config["JWT_COOKIE_SAMESITE"] = "Lax"
 app.config["JWT_COOKIE_SECURE"] = False  # True in production with HTTPS
 
 # initialize the app with the extension
@@ -160,7 +160,10 @@ def login_user():  # Does when you click login button
 @app.route("/api/logout", methods=["POST"])
 def logout():
     response = jsonify({"msg": "Logged out"})
-    unset_jwt_cookies(response)
+    try:
+        unset_jwt_cookies(response)
+    except ValueError:
+        return jsonify({"error" : "Logging out did not work"}), 
     return response, 200
 
 

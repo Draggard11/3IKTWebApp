@@ -14,7 +14,7 @@ function NavBar() {
   const {username} = useUsername(); // ✅ now inside UserProvider
   
   const logoutTest = async () => {
-    await fetch("http://localhost:5000/api/logout", {
+    await fetch("http://127.0.0.1:5000/api/logout", {
       method: "POST",
       credentials: "include",
     }).then(() => {
