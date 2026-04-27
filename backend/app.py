@@ -16,6 +16,8 @@ from flask_jwt_extended import (
 )
 from flask_restful import Api, Resource
 
+from sqlalchemy.orm import joinedload
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
@@ -54,6 +56,7 @@ with app.app_context():
         comment = user.makeComment("My first comment", 5, blog)
         db.session.add(user)
         db.session.add(blog)
+        db.session.add(comment)
         db.session.commit()
 
 
@@ -84,9 +87,13 @@ def getBlogs():
 
 @app.route("/api/blog/<int:id>", methods=["GET"])
 def getBlog(id):
-    blog = db.get_or_404(Blog, id)
+    blog = db.session.get(Blog, id, options=[
+        joinedload(Blog.madeBy),
+        joinedload(Blog.comments).joinedload(Comment.commenter)
+    ])
+    if blog is None:
+        return jsonify({"error": "Blog not found"}), 404
     return jsonify(blog.toDict())
-
 
 # https://flask-sqlalchemy.readthedocs.io/en/stable/quickstart/
 
