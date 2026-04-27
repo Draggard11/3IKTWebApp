@@ -1,5 +1,6 @@
 import os
 from datetime import timedelta
+from operator import is_none
 
 from domain import Blog, Comment, User, db
 from flask import Flask, jsonify, request
@@ -15,7 +16,6 @@ from flask_jwt_extended import (
     unset_jwt_cookies,
 )
 from flask_restful import Api, Resource
-
 from sqlalchemy.orm import joinedload
 
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -24,7 +24,7 @@ app = Flask(__name__)
 CORS(app, origins=["http://localhost:5173"], supports_credentials=True)
 # configure the SQLite database, relative to the app instance folder
 app.config["JWT_SECRET_KEY"] = "super-secret"  # Change this!
-app.config["JWT_COOKIE_CSRF_PROTECT"] = True
+app.config["JWT_COOKIE_CSRF_PROTECT"] = False
 app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
 app.config["JWT_VERIFY_SUB"] = False
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(days=30)
@@ -76,8 +76,8 @@ def getBlogs():
     # SELECT * FROM BLOG
     # fra nederste rad til topp i forhold til hvilke blog som skal komme først
     try:
-        page = int(request.args.get('page', 1))
-        limit = int(request.args.get('limit', 10))
+        page = int(request.args.get("page", 1))
+        limit = int(request.args.get("limit", 10))
         offset = (page - 1) + limit
         blogs = Blog.query.order_by(Blog.id.desc())
         return jsonify(blogs)
@@ -85,15 +85,21 @@ def getBlogs():
         return jsonify({"error": "Invalid page or limit parameter"}), 400
     # return jsonify(Blog.query.all())
 
+
 @app.route("/api/blog/<int:id>", methods=["GET"])
 def getBlog(id):
-    blog = db.session.get(Blog, id, options=[
-        joinedload(Blog.madeBy),
-        joinedload(Blog.comments).joinedload(Comment.commenter)
-    ])
+    blog = db.session.get(
+        Blog,
+        id,
+        options=[
+            joinedload(Blog.madeBy),
+            joinedload(Blog.comments).joinedload(Comment.commenter),
+        ],
+    )
     if blog is None:
         return jsonify({"error": "Blog not found"}), 404
     return jsonify(blog.toDict())
+
 
 # https://flask-sqlalchemy.readthedocs.io/en/stable/quickstart/
 
@@ -176,21 +182,21 @@ def make_blog_post(user, title, text):  # Does when you click create blog post b
 @jwt_required()
 def make_comment(id):  # Does when you click create comment button
     data = request.get_json()
-    if data == None:
+    if is_none(data):
         return jsonify({"error": "Invalid JSON data"}), 400
-    try:
         # maybe make it possible for anonymous posts
-        commenter = current_user
-        text = data["text"]
-        stars = data["stars"]
-        blog = db.get_or_404(Blog, id)
-        comment = Comment(commenter, blog)
-        comment.post(text, stars)
-        db.session.add(comment)
-        db.session.commit()
-        return jsonify(comment.toDict), 200
-    except:
-        return jsonify({"error": "errored"}), 400
+    commenter = current_user
+    text = data["text"]
+    stars = data["stars"]
+    blog = db.get_or_404(Blog, id)
+    if not isinstance(commenter, User):
+        return jsonify({"error": "Not logged in"}), 400
+    comment = commenter.makeComment(text, stars, blog)
+    if is_none(comment):
+        return jsonify({"error": "Invalid comment data"}), 400
+    db.session.add(comment)
+    db.session.commit()
+    return jsonify(comment.toDict()), 200
 
 
 # region Private methods
