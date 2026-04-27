@@ -1,20 +1,20 @@
 from typing import List, Optional
-from sqlalchemy import ForeignKey
-from sqlalchemy import String, Integer, Boolean, Date, Uuid
-from sqlalchemy.orm import DeclarativeBase
-from sqlalchemy.orm import Mapped, mapped_column
 
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import relationship
+from sqlalchemy import Boolean, Date, ForeignKey, Integer, String, Uuid
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+
 
 class Base(DeclarativeBase):
     pass
+
 
 db = SQLAlchemy(model_class=Base)
 
 # region User class
 
-class User(db.Model): # Bob
+
+class User(db.Model):  # Bob
     """
     Represents a user in the blogging system with capabilities to create, edit, and delete blog posts and comments.
 
@@ -32,17 +32,24 @@ class User(db.Model): # Bob
         deleteComment(comment, blog): Delete a comment
         editComment(comment, text, stars): Edit a comment
     """
+
     __tablename__ = "user"
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True) # class attribute
+    id: Mapped[int] = mapped_column(
+        Integer, primary_key=True, autoincrement=True
+    )  # class attribute
     username: Mapped[str] = mapped_column(unique=True)
     password: Mapped[str]
-    comments: Mapped[List["Comment"]] = relationship(cascade="all, delete-orphan", back_populates="commenter")
-    blogs: Mapped[List["Blog"]] = relationship(cascade="all, delete-orphan", back_populates="madeBy")
+    comments: Mapped[List["Comment"]] = relationship(
+        cascade="all, delete-orphan", back_populates="commenter"
+    )
+    blogs: Mapped[List["Blog"]] = relationship(
+        cascade="all, delete-orphan", back_populates="madeBy"
+    )
 
     def __init__(self, username: str, password):
         """Initialize a User with id, username, and password.
-        
+
         Args:
             id (str): Unique identifier for the user
             username (str): The user's username
@@ -51,15 +58,15 @@ class User(db.Model): # Bob
         self.username = username
         self.password = password
 
-# region Blog Methods
+    # region Blog Methods
 
     def makeBlogPost(self, title: str, text: str):
         """Create a new blog post with the given title and text.
-        
+
         Args:
             title (str): The title of the blog post
             text (str): The content of the blog post
-            
+
         Returns:
             Blog: The created Blog object, or None if title or text is empty or blog already exists
         """
@@ -67,10 +74,10 @@ class User(db.Model): # Bob
         blog.post(title, text, [])
         self.blogs.append(blog)
         return blog
-    
+
     def deleteBlogPost(self, blog: "Blog"):
         """Delete a blog post from the user's blogs.
-        
+
         Args:
             blog (Blog): The blog post to delete
         """
@@ -84,7 +91,7 @@ class User(db.Model): # Bob
 
     def editBlogPost(self, blog: "Blog", title: str, text: str):
         """Edit a blog post if the user is the author.
-        
+
         Args:
             blog (Blog): The blog post to edit
             title (str): The new title
@@ -93,17 +100,17 @@ class User(db.Model): # Bob
         if self == blog.madeBy:
             blog.edit(title, text)
 
-# endregion
+    # endregion
 
-# region Comment Methods
+    # region Comment Methods
     def makeComment(self, text, stars: int, blog: "Blog"):
         """Create a new comment on a blog post.
-        
+
         Args:
             text (str): The comment text
             stars (int): A rating in stars
             blog (Blog): The blog post being commented on
-            
+
         Returns:
             Comment: The created Comment object
         """
@@ -115,7 +122,7 @@ class User(db.Model): # Bob
 
     def deleteComment(self, comment: "Comment", blog: "Blog"):
         """Delete a comment if the user is the blog author or comment author.
-        
+
         Args:
             comment (Comment): The comment to delete
             blog (Blog): The blog containing the comment
@@ -131,7 +138,7 @@ class User(db.Model): # Bob
 
     def editComment(self, comment: "Comment", text: str, stars: int):
         """Edit a comment if the user is the comment author.
-        
+
         Args:
             comment (Comment): The comment to edit
             text (str): The new comment text
@@ -141,39 +148,41 @@ class User(db.Model): # Bob
             if comment.edit(text, stars):
                 return True
         return False
-# endregion
-# region Getter and Setter methods
+
+    # endregion
+    # region Getter and Setter methods
     def getUsername(self):
         """Get the user's username.
-        
+
         Returns:
             str: The username
         """
         return self.username
-    
+
     def setUsername(self, username: str):
         """Set the user's username.
-        
+
         Args:
             username (str): The new username
         """
         self.username = username
-    
+
     def savePassword(self):
         """Get the user's password.
-        
+
         Returns:
             str: The password
         """
         return self.password
-    
+
     def getPassword(self, password):
         """Set the user's password.
-        
+
         Args:
             password (str): The new password
         """
         self.password = password
+
 
 # endregion
 
@@ -182,6 +191,7 @@ class User(db.Model): # Bob
 # endregion
 
 # endregion
+
 
 # region Blog class
 class Blog(db.Model):
@@ -202,21 +212,26 @@ class Blog(db.Model):
         addComment(comment): Add a comment to the blog post
         deleteComment(comment): Delete a comment from the blog post
     """
+
     __tablename__ = "blog"
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True) # class attribute
+    id: Mapped[int] = mapped_column(
+        Integer, primary_key=True, autoincrement=True
+    )  # class attribute
     title: Mapped[str]
     text: Mapped[str]
     madeBy: Mapped["User"] = relationship(back_populates="blogs")
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     publishedAt: Mapped[int]
     lastEditedAt: Mapped[int | None]
-    comments: Mapped[List["Comment"]] = relationship(cascade="all, delete-orphan", back_populates="blog")
+    comments: Mapped[List["Comment"]] = relationship(
+        cascade="all, delete-orphan", back_populates="blog"
+    )
 
     def __init__(self, user: "User"):
         self.madeBy = user
 
-# region Blog methods
+    # region Blog methods
     def post(self, title, text, comments):
         if not self.__checkBlog(title, text):
             return False
@@ -231,7 +246,7 @@ class Blog(db.Model):
 
     Args:
     """
-    
+
     def edit(self, title, text):
         if not self.__checkBlog(self.title, self.text):
             return False
@@ -241,21 +256,22 @@ class Blog(db.Model):
         self.text = text
         self.lastEditedAt = 0
         return True
-# endregion
 
-# region Comment methods
+    # endregion
+
+    # region Comment methods
     def addComment(self, comment):
         self.comments.append(comment)
-    
+
     def deleteComment(self, comment):
         try:
             self.comments.remove(comment)
         except ValueError:
             return
 
-# endregion
+    # endregion
 
-# region Private methods
+    # region Private methods
     def __checkBlog(self, title: str, text: str) -> bool:
         if not title:
             print("The title cannot be empty.")
@@ -271,32 +287,37 @@ class Blog(db.Model):
             return False
         return True
 
-# endregion
+    # endregion
 
-# region Getter and Setter method
+    # region Helper methods
     def getTitle(self):
-        
+
         return self.title
-    
-    
+
     def setTitle(self, title: str):
 
         self.title = title
 
-
     def getText(self):
-        
+
         return self.text
-    
 
     def setText(self, text: str):
-        
+
         self.text = text
 
+    def toDict(self) -> dict:
+        return {
+            "id": self.id,
+            "title": self.title,
+            "text": self.text,
+            "madeBy": self.madeBy.username,
+            "comments": [comment.toDict() for comment in self.comments],
+        }
 
-# endregion
+    # endregion
 
-# region Overridden methods
+    # region Overridden methods
     def __eq__(self, other):
         if not isinstance(other, Blog):
             return False
@@ -304,18 +325,20 @@ class Blog(db.Model):
 
     def __hash__(self):
         return hash((self.title, self.madeBy))
-    
+
     def __str__(self):
         return f"Blog(title='{self.title}', author={self.madeBy}, published={self.publishedAt})"
+
+
 # endregion
 # endregion
+
 
 # region Comment class
 class Comment(db.Model):
-
     """
     Represents a comment in the blogging system with capabilities to add and edit comments.
-    
+
     Attributes:
         commenter (user): User that posts the comment
         text (str): The comment
@@ -326,9 +349,12 @@ class Comment(db.Model):
         post(commenter, blog): Post a comment
         edit(text, stars): Edit a comment
     """
+
     __tablename__ = "comment"
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True) # class attribute
+    id: Mapped[int] = mapped_column(
+        Integer, primary_key=True, autoincrement=True
+    )  # class attribute
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     commenter: Mapped["User"] = relationship(back_populates="comments")
     text: Mapped[str]
@@ -342,10 +368,10 @@ class Comment(db.Model):
         self.commenter = commenter
         self.blog = blog
 
-# region Comment methods
+    # region Comment methods
     def post(self, text: str, stars: int):
         """Create a new comment on a blog post.
-        
+
         Args:
             text (str): The comment text
             stars (int): A rating in stars between 0-5
@@ -360,7 +386,7 @@ class Comment(db.Model):
 
     def edit(self, text: str, stars: int):
         """Edits a comment on a blog post.
-        
+
         Args:
             text (str): The comment text
             stars (int): A rating in stars
@@ -375,25 +401,28 @@ class Comment(db.Model):
         self.lastEditedAt = 0
         return True
 
-# region private methods
+    # region private methods
     def __checkComment(self, text: str, stars: int) -> bool:
         if not text or not stars:
             return False
         if not self.__checkStars(stars):
             return False
-        if self.__checkText(text) is False: return False
+        if self.__checkText(text) is False:
+            return False
         return True
+
     # stars should be inbetween 1 and 5
     def __checkStars(self, stars: int) -> bool:
-        result = stars in range(0,6)
+        result = stars in range(0, 6)
         return result
-    
+
     def __checkText(self, text: str) -> bool:
         result = len(text) <= 50
         return result
-# endregion
 
-# region Getter and Setter methods
+    # endregion
+
+    # region Helper methods
 
     def getText(self):
         return self.text
@@ -406,6 +435,15 @@ class Comment(db.Model):
 
     def setStars(self, stars):
         self.stars = stars
+
+    def toDict(self) -> dict:
+        return {
+            "id": self.id,
+            "commenter": self.commenter.username,
+            "text": self.text,
+            "stars": self.stars,
+        }
+
 
 # endregion
 

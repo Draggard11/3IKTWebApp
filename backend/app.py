@@ -1,11 +1,20 @@
-from domain import User, Blog, Comment, db
-from flask import Flask, jsonify, request
-from flask_restful import Resource, Api
-from flask_cors import CORS
-from flask_bcrypt import Bcrypt
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, JWTManager, set_access_cookies, current_user, unset_jwt_cookies
 import os
 from datetime import timedelta
+
+from domain import Blog, Comment, User, db
+from flask import Flask, jsonify, request
+from flask_bcrypt import Bcrypt
+from flask_cors import CORS
+from flask_jwt_extended import (
+    JWTManager,
+    create_access_token,
+    current_user,
+    get_jwt_identity,
+    jwt_required,
+    set_access_cookies,
+    unset_jwt_cookies,
+)
+from flask_restful import Api, Resource
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -18,8 +27,10 @@ app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
 app.config["JWT_VERIFY_SUB"] = False
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(days=30)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'project.db')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(
+    basedir, "project.db"
+)
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 app.config["JWT_COOKIE_SAMESITE"] = "Lax"
 app.config["JWT_COOKIE_SECURE"] = False  # True in production with HTTPS
@@ -35,23 +46,27 @@ with app.app_context():
     db.create_all()
 
     # Initial User Setup for testing
-    if not db.session.query(User).filter_by(username='bob').first():
-        user = User('bob', bcrypt.generate_password_hash(
-            "pass123").decode('utf-8'))
+    if not db.session.query(User).filter_by(username="bob").first():
+        user = User("bob", bcrypt.generate_password_hash("pass123").decode("utf-8"))
         blog = user.makeBlogPost(
-            "My First Blog", "This is the content of my first blog post.")
+            "My First Blog", "This is the content of my first blog post."
+        )
+        comment = user.makeComment("My first comment", 5, blog)
         db.session.add(user)
         db.session.add(blog)
         db.session.commit()
+
 
 @jwt.user_identity_loader
 def user_identity_lookup(user):
     return user.id
 
+
 @jwt.user_lookup_loader
 def user_lookup_callback(_jwt_header, jwt_data):
     identity = jwt_data["sub"]
     return User.query.filter_by(id=identity).one_or_none()
+
 
 @app.route("/api/blogs", methods=["GET"])
 def getBlogs():
@@ -69,7 +84,9 @@ def getBlogs():
 
 @app.route("/api/blog/<int:id>", methods=["GET"])
 def getBlog(id):
-    return jsonify(db.get(Blog, id))
+    blog = db.get_or_404(Blog, id)
+    return jsonify(blog.toDict())
+
 
 # https://flask-sqlalchemy.readthedocs.io/en/stable/quickstart/
 
@@ -85,7 +102,9 @@ def register_user():
     data = request.get_json()
     # check that username and password exists
     if data is None or "username" not in data or "password" not in data:
-        return jsonify({"error": "Invalid JSON data. Requires username and password."}), 400
+        return jsonify(
+            {"error": "Invalid JSON data. Requires username and password."}
+        ), 400
     username = data["username"]
     password = data["password"]
 
@@ -107,7 +126,7 @@ def login_user():  # Does when you click login button
     data = request.get_json()
     if data == None:
         return jsonify({"error": "Invalid JSON data"}), 400
-    
+
     username = data["username"]
     password = data["password"]
 
@@ -115,7 +134,7 @@ def login_user():  # Does when you click login button
         return jsonify({"error": "Username and password are required"}), 400
 
     user = db.session.query(User).filter_by(username=username).first()
-    
+
     if not user:
         return jsonify({"error": "User not registered"}), 400
 
@@ -159,20 +178,22 @@ def make_comment(id):  # Does when you click create comment button
         comment.post(text, stars)
         db.session.add(comment)
         db.session.commit()
-        return jsonify({"text": text, "stars": stars}), 200
+        return jsonify(comment.toDict), 200
     except:
         return jsonify({"error": "errored"}), 400
+
 
 # region Private methods
 # does not work
 
 
 def __savePassword(password: str):
-    return bcrypt.generate_password_hash(password).decode('utf-8')
+    return bcrypt.generate_password_hash(password).decode("utf-8")
 
 
 def __checkPassword(password: str, hashed_password: str) -> bool:
     return bcrypt.check_password_hash(hashed_password, password)
+
 
 # endregion
 
