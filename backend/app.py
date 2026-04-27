@@ -21,7 +21,7 @@ app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(days=30)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'project.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# app.config["JWT_COOKIE_SAMESITE"] = "Lax"
+app.config["JWT_COOKIE_SAMESITE"] = "Lax"
 app.config["JWT_COOKIE_SECURE"] = False  # True in production with HTTPS
 
 # initialize the app with the extension
