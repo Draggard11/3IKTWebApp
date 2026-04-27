@@ -4,14 +4,12 @@ import { BlogCard } from "./ShowBlogs";
 import '../styles/GetBlogs.css';
 
 import mockBlogs from './MockBlogs.json';
-import fetchBlogs from "../services/blogs";
+import { fetchBlog } from "../services/blogs";
 
 function GetBlogs() {
     let allBlogs: Blog[] = mockBlogs;
 
     const blogCounterSteps = 10;
-    const [blogCounterStart, setBlogCounterStart] = useState<number>(0);
-    const [blogCounterEnd, setBlogCounterEnd] = useState<number>(blogCounterSteps);
 
     const [pageNumber, setPageNumber] = useState<number>(1);
     const [currentBlogs, setCurrentBlogs] = useState<Blog[]>([]);
@@ -24,7 +22,7 @@ function GetBlogs() {
             setLoading(true);
             setError(null);
             try {
-                const blogs = await fetchBlogs(pageNumber, blogCounterSteps);
+                const blogs = await fetchBlog(pageNumber);
                 setCurrentBlogs(blogs);
                 
                 setTotalBlogs(blogs.length * pageNumber + blogCounterSteps);

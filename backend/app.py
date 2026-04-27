@@ -75,7 +75,7 @@ def getBlogs():
     try:
         page = int(request.args.get('page', 1))
         limit = int(request.args.get('limit', 10))
-        offset = (page - 1) * limit
+        offset = (page - 1) + limit
         blogs = Blog.query.order_by(Blog.id.desc())
         return jsonify(blogs)
     except ValueError:
