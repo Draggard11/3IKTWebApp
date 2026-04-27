@@ -1,9 +1,10 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import type { Blog } from "./ShowBlogs";
 import { BlogCard } from "./ShowBlogs";
 import '../styles/GetBlogs.css';
 
 import mockBlogs from './MockBlogs.json';
+import fetchBlogs from "../services/blogs";
 
 function GetBlogs() {
     let allBlogs: Blog[] = mockBlogs;
@@ -13,56 +14,63 @@ function GetBlogs() {
     const [blogCounterEnd, setBlogCounterEnd] = useState<number>(blogCounterSteps);
 
     const [pageNumber, setPageNumber] = useState<number>(1);
+    const [currentBlogs, setCurrentBlogs] = useState<Blog[]>([]);
+    const [totalBlogs, setTotalBlogs] = useState<number>(0);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
 
-    const displayNBlogs = allBlogs.slice(blogCounterStart, blogCounterEnd);
+    React.useEffect(() => {
+        const loadBlogs = async () => {
+            setLoading(true);
+            setError(null);
+            try {
+                const blogs = await fetchBlogs(pageNumber, blogCounterSteps);
+                setCurrentBlogs(blogs);
+                
+                setTotalBlogs(blogs.length * pageNumber + blogCounterSteps);
+            } catch(err) {
+                setError(err instanceof Error ? err.message : 'Unknown error');
+            } finally {
+                setLoading(false);
+            }
+        }
+        loadBlogs();
+    }, [pageNumber]);
 
     const [disableNextBtn, setDisableNextBtn] = useState<boolean>(false);
     const [disableLastBtn, setDisableLastBtn] = useState<boolean>(true);
 
     function ShowBlogs() {
-        return (
-            displayNBlogs.map((blog) => (
-                <>
-                    <BlogCard key={blog.id} blog={blog} />
-                    {/*<button onClick={() => ExpandBlog(blog.id)}>Show more for £19.95</button>*/}
-                </>
-            ))
-        )
+        if (loading) return <p>Loading blogs...</p>;
+        if (error) return <p>Error: {error}</p>;
+        return currentBlogs.map((blog) => (
+            <BlogCard key={blog.id} blog={blog} />
+        ));
     }
 
     const NextPage = () => {
-        
-        if (pageNumber === allBlogs.length / blogCounterSteps) {
+        if (pageNumber >= Math.ceil(totalBlogs / blogCounterSteps)) {
             setDisableNextBtn(true);
             return;
         }
         setDisableNextBtn(false);
         setDisableLastBtn(false);
-
         setPageNumber(pageNumber + 1);
-
-        setBlogCounterStart(blogCounterStart + blogCounterSteps); //changes the blog's start value to display
-        setBlogCounterEnd(blogCounterEnd + blogCounterSteps); //changes the blog's end value to display
-    }
+    };
 
     const LastPage = () => {
-
-        if (pageNumber === 1) {
+        if (pageNumber <= 1) {
             setDisableLastBtn(true);
             return;
         }
         setDisableLastBtn(false);
         setDisableNextBtn(false);
-        
         setPageNumber(pageNumber - 1);
-
-        setBlogCounterStart(blogCounterStart - blogCounterSteps); //changes the blog's start value to display
-        setBlogCounterEnd(blogCounterEnd - blogCounterSteps); //changes the blog's end value to display
-    }
+    };
 
     return (
         <div id="blogs-container">
-            <p id="showing-n-blogs">Showing {displayNBlogs.length} blogs</p>
+            <p id="showing-n-blogs">Showing {currentBlogs.length} blogs</p>
             <div id="blogs">
                 {ShowBlogs()}
             </div>
