@@ -47,7 +47,7 @@ function GetBlogs() {
     }
 
     const NextPage = () => {
-        if (pageNumber >= Math.ceil(totalBlogs / blogCounterSteps)) {
+        if (pageNumber == Math.ceil(totalBlogs / blogCounterSteps)) {
             setDisableNextBtn(true);
             return;
         }
@@ -57,7 +57,7 @@ function GetBlogs() {
     };
 
     const LastPage = () => {
-        if (pageNumber <= 1) {
+        if (pageNumber == 1) {
             setDisableLastBtn(true);
             return;
         }
@@ -68,11 +68,11 @@ function GetBlogs() {
 
     return (
         <div id="blogs-container">
-            <p id="showing-n-blogs">Showing {currentBlogs.length} blogs</p>
+            <p id="showing-n-blogs">{ currentBlogs.length === 1 ? 'Showing 1 blog' : `Showing ${currentBlogs.length} blog`}</p>
             <div id="blogs">
                 {ShowBlogs()}
             </div>
-            <p style={{marginBottom: 8}}>Page {pageNumber} / {allBlogs.length / blogCounterSteps}</p>
+            <p style={{marginBottom: 8}}>Page {pageNumber} / {currentBlogs.length}</p>
             <div id="switch-page-container">
                 <button className="switch-page" disabled={disableLastBtn} onClick={() => LastPage()}>{'<'} Last page</button>
                 <button className="switch-page" disabled={disableNextBtn} onClick={() => NextPage()}>Next page {'>'}</button>
