@@ -2,10 +2,12 @@ import { useState } from 'react';
 import { registerUser, loginUser } from '../services/user';
 import '../styles/Login.css';
 import { useUsername } from '../components/UserContext';
+import { useNavigate } from 'react-router';
 
 function Login() {
   const [login, setLogin] = useState<boolean>(true);
   const { refreshUser } = useUsername(); // ✅ called at top level of component
+  const navigate = useNavigate();
 
   async function sign(formData: any) {
     const username = formData.get("username");
@@ -19,6 +21,7 @@ function Login() {
     if (login) {
       loginUser(username, password).then(() => {
         refreshUser(); // ✅ update username in navbar after login
+        navigate('/');
         alert(`Welcome back, ${username}`);
       }, (reason) => {
         alert(`Failed login, ${reason}`);
@@ -27,6 +30,7 @@ function Login() {
       registerUser(username, password).then(() => {
         loginUser(username, password).then(() => {
           refreshUser(); // ✅ also refresh after register+login
+          navigate('/');
           alert('Welcome back, ' + username);
         }, () => {
           alert('Registration successful, please log in');
