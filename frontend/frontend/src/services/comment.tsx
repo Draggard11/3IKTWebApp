@@ -1,4 +1,4 @@
-function getCookie(name: string): string {
+export function getCookie(name: string): string {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
   if (parts.length === 2) {
