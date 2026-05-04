@@ -67,14 +67,14 @@ export function BlogCard({ blog }: { blog: Blog }) {
         </h2>
         <div key={`container-${blog.id}`} className="blog-text-container">
           <p key={`text-${blog.id}`} className="blog-text">
-            {!canShowMoreText ? blog.text.slice(0, 50) + "..." : blog.text}
+            {!canShowMoreText && blog.text.length > 50 ? blog.text.slice(0, 50) + "..." : blog.text}
             <span style={{ color: "transparent", userSelect: "none" }}>__</span>
-            <button
+            {blog.text.length > 50 ? <button
               key={blog.id}
               onClick={() => setCanShowMoreText(!canShowMoreText)}
             >
               {canShowMoreText ? "Hide text" : "Show text"}
-            </button>
+            </button> : ''}
           </p>
         </div>
       </div>

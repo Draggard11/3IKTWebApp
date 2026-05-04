@@ -51,7 +51,7 @@ with app.app_context():
     if not db.session.query(User).filter_by(username="bob").first():
         user = User("bob", bcrypt.generate_password_hash("pass123").decode("utf-8"))
         blog = user.makeBlogPost(
-            "My First Blog", "This is the content of my first blog post."
+            "My First Blog", "Khi một người đàn ông uống cà phê sau khi con ếch thấy nước Phần Lan, đừng hỏi người nông dân để ngồi ở giữa những nhà của mình."
         )
         comment = user.makeComment("My first comment", 5, blog)
         db.session.add(user)
