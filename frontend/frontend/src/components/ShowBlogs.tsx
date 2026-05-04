@@ -46,9 +46,9 @@ export function BlogCard({ blog }: { blog: Blog }) {
             </div>
           ))}
         </div>
-        { !username ? 
-          <MakeComment /> : 
-          <div style={{borderStyle: 'solid', padding: 12, borderWidth: 2, borderRadius: 16}}>
+        {!username ?
+          <MakeComment /> :
+          <div style={{ borderStyle: 'solid', padding: 12, borderWidth: 2, borderRadius: 16 }}>
             <p>You need to be logged in to write comments.</p>
           </div>
         }
@@ -58,15 +58,15 @@ export function BlogCard({ blog }: { blog: Blog }) {
 
   return (
     <div
-      style={{ width: canShowMoreText ? "50%" : "fit-content" }}
-      id="blog-card-container"
+      style={{ width: canShowMoreText ? "100%" : "fit-content" }}
+      className="blog-card-container"
     >
       <div className="blog-title-and-text-container">
-        <h2 key={`title-${blog.title}`} id="blog-title">
+        <h2 key={`title-${blog.title}`} className="blog-title">
           {blog.title}
         </h2>
-        <div key={`container-${blog.id}`} id="blog-text-container">
-          <p key={`text-${blog.id}`} id="blog-text">
+        <div key={`container-${blog.id}`} className="blog-text-container">
+          <p key={`text-${blog.id}`} className="blog-text">
             {!canShowMoreText ? blog.text.slice(0, 50) + "..." : blog.text}
             <span style={{ color: "transparent", userSelect: "none" }}>__</span>
             <button

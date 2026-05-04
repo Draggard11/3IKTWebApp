@@ -6,28 +6,28 @@ body {
     margin: 0;
 }
 
-#showing-n-blogs {
+.showing-n-blogs {
     margin: 12px 12px;
     align-self: center;
     font-size: 18px;
 }
 
-#blogs-container {
+.blogs-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 100%;
+    width: auto;
     height: fit-content;
 }
 
-#blogs {
+.blogs {
     flex: 1;
     margin-right: 12px;
     margin-left: 12px;
 }
 
-#switch-page-container {
+.switch-page-container {
     display: flex;
     flex-direction: row;
     margin-bottom: 12px;

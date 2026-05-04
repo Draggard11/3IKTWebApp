@@ -24,23 +24,23 @@ export default function MakeComment() {
     postComment(text, stars);
   }
   return (
-    <div id="make-comment-container">
+    <div className="make-comment-container">
       <form action={handleSubmit}>
         <input
-          id="comment-text-field"
+          className="comment-text-field"
           type="text"
           placeholder="Ăn khi ngồi luôn"
           onChange={(e) => setText(e.target.value)}
         />
         <br />
         <input
-          id="comment-range-stars"
+          className="comment-range-stars"
           type="range"
           min={1}
           max={5}
           onChange={(e) => setStars(Number(e.target.value))}
         />
-        <input id="comment-submit" type="submit" value="Send" />
+        <input className="comment-submit" type="submit" value="Send" />
       </form>
     </div>
   );
