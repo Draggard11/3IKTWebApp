@@ -1,11 +1,23 @@
+import { postBlog } from '../services/blogs';
 import '../styles/palette.css';
 
-const MakeBlogs = () => {
+export default function MakeBlogs() {
+
+  const pb = async (formData:any) => {
+    const data = await postBlog(formData.get('myInput'), formData.get('postContent'));
+    if (!data.ok) {
+      alert('Something went wrong');
+      return;
+    }
+    else {
+      alert('Potato');
+    }
+  }
 
   return (
     <>
       <div style={{ display: 'flex', borderStyle: 'inset', borderColor: '#7fc7a7', borderWidth: 3, padding: 12, borderRadius: 16, backgroundColor: '#fcfaf8' }}>
-        <form method="post" style={{ padding: 12 }}>
+        <form action={pb} style={{ padding: 12 }}>
           <label style={{ borderStyle: 'solid', borderWidth: 2, padding: 18, borderRadius: 16, backgroundColor: '#99d199' }}>
             Post title: <input name="myInput" style={{ padding: 8 }} />
           </label>
@@ -28,5 +40,3 @@ const MakeBlogs = () => {
     </>
   )
 }
-
-export default MakeBlogs

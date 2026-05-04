@@ -102,8 +102,8 @@ def getBlog(id):
 
 
 @app.route("/api/blog", methods=["POST"])
-@jwt_required
-def postBlog()
+@jwt_required()
+def postBlog():
     data = request.get_json()
     if is_none(data):
         return jsonify({"error": "Invalid JSON data"}), 400
@@ -113,7 +113,7 @@ def postBlog()
     text = data["text"]
     if not isinstance(madeBy, User):
         return jsonify({"error": "Not logged in"}), 400
-    blog = user.make_blog_post(title, text)
+    blog = madeBy.makeBlogPost(title, text)
     if is_none(blog):
         return jsonify({"error": "Invalid blog data"}), 400
     db.session.add(blog)
