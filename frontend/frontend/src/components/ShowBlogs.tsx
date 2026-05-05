@@ -20,7 +20,7 @@ export interface Comment {
   stars: number;
 }
 
-export function BlogCard({ blog }: { blog: Blog }) {
+export function BlogCard({ refreshKey, blog }: { refreshKey: number, blog: Blog }) {
   const [canShowMoreText, setCanShowMoreText] = useState<boolean>(false);
   const [showComments, setShowComments] = useState<boolean>(false);
 
@@ -46,19 +46,27 @@ export function BlogCard({ blog }: { blog: Blog }) {
             </div>
           ))}
         </div>
-        {!username ?
-          <MakeComment /> :
-          <div style={{ borderStyle: 'solid', padding: 12, borderWidth: 2, borderRadius: 16 }}>
+        {!username ? (
+          <MakeComment refreshKey={refreshKey} />
+        ) : (
+          <div
+            style={{
+              borderStyle: "solid",
+              padding: 12,
+              borderWidth: 2,
+              borderRadius: 16,
+            }}
+          >
             <p>You need to be logged in to write comments.</p>
           </div>
-        }
+        )}
       </div>
     );
   };
 
   return (
     <div
-      style={{ width: canShowMoreText ? "100%" : "fit-content" }}
+      style={{width: 500}}
       className="blog-card-container"
     >
       <div className="blog-title-and-text-container">
@@ -67,14 +75,20 @@ export function BlogCard({ blog }: { blog: Blog }) {
         </h2>
         <div key={`container-${blog.id}`} className="blog-text-container">
           <p key={`text-${blog.id}`} className="blog-text">
-            {!canShowMoreText && blog.text.length > 50 ? blog.text.slice(0, 50) + "..." : blog.text}
+            {!canShowMoreText && blog.text.length > 50
+              ? blog.text.slice(0, 50) + "..."
+              : blog.text}
             <span style={{ color: "transparent", userSelect: "none" }}>__</span>
-            {blog.text.length > 50 ? <button
-              key={blog.id}
-              onClick={() => setCanShowMoreText(!canShowMoreText)}
-            >
-              {canShowMoreText ? "Hide text" : "Show text"}
-            </button> : ''}
+            {blog.text.length > 50 ? (
+              <button
+                key={blog.id}
+                onClick={() => setCanShowMoreText(!canShowMoreText)}
+              >
+                {canShowMoreText ? "Hide text" : "Show text"}
+              </button>
+            ) : (
+              ""
+            )}
           </p>
         </div>
       </div>

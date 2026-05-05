@@ -73,17 +73,24 @@ def user_lookup_callback(_jwt_header, jwt_data):
 
 @app.route("/api/blogs", methods=["GET"])
 def getBlogs():
-    # SELECT * FROM BLOG
-    # fra nederste rad til topp i forhold til hvilke blog som skal komme først
     try:
         page = int(request.args.get("page", 1))
         limit = int(request.args.get("limit", 10))
-        offset = (page - 1) + limit
-        blogs = Blog.query.order_by(Blog.id.desc())
-        return jsonify(blogs)
+
+        offset = (page - 1) * limit  # ✅ FIXED
+
+        blogs = (
+            Blog.query
+            .order_by(Blog.id.desc())
+            .offset(offset)
+            .limit(limit)
+            .all()
+        )
+
+        return jsonify([blog.toDict() for blog in blogs])  # ✅ serialize properly
+
     except ValueError:
         return jsonify({"error": "Invalid page or limit parameter"}), 400
-    # return jsonify(Blog.query.all())
 
 
 @app.route("/api/blog/<int:id>", methods=["GET"])

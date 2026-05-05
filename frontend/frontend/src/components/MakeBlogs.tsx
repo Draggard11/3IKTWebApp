@@ -1,18 +1,18 @@
 import { postBlog } from '../services/blogs';
 import '../styles/palette.css';
 
-export default function MakeBlogs() {
+export default function MakeBlogs({onSuccess} : {onSuccess: () => void}) {
 
-  const pb = async (formData:any) => {
-    const data = await postBlog(formData.get('myInput'), formData.get('postContent'));
-    if (!data.ok) {
-      alert('Something went wrong');
-      return;
-    }
-    else {
+  // MakeBlogs — call onSuccess after potato alert
+    const pb = async (formData: any) => {
+      const response = await postBlog(formData.get('myInput'), formData.get('postContent'));
+      if (!response.ok) {
+        alert('Something went wrong');
+        return;
+      }
       alert('Potato');
+      onSuccess(); // ← trigger refresh
     }
-  }
 
   return (
     <>

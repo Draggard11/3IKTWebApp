@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Routes, Route, BrowserRouter, NavLink } from "react-router";
+import { Routes, Route, BrowserRouter } from "react-router";
 
 import './styles/App.css';
 import './styles/palette.css';
@@ -16,6 +16,9 @@ function MainContent() {
   const username = useUsername();
 
   const [showBlog, setShowBlog] = useState(false);
+
+  const [refreshKey, setRefreshKey] = useState(0);
+
 
   React.useEffect(() => {
     username.refreshUser();
@@ -44,11 +47,11 @@ function MainContent() {
 
         </div>
       </div>
-      {showBlog && <MakeBlogs />}
+      {showBlog && <MakeBlogs onSuccess={() => setRefreshKey(k => k + 1)} />}
       <br /><br />
 
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Home refreshKey={refreshKey} />} />
         <Route path="/login" element={<Login />} />
       </Routes>
     </>

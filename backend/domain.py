@@ -71,7 +71,9 @@ class User(db.Model):  # Bob
             Blog: The created Blog object, or None if title or text is empty or blog already exists
         """
         blog = Blog(self)
-        blog.post(title, text, [])
+        if not blog.post(title, text, []):
+            return None
+        db.session.add(blog)       # ✅ put it in the session first
         self.blogs.append(blog)
         return blog
 
@@ -116,6 +118,7 @@ class User(db.Model):  # Bob
         """
         comment = Comment(self, blog)
         if comment.post(text, stars):
+            db.session.add(comment)    # ✅ add here too
             self.comments.append(comment)
             blog.addComment(comment)
             return comment

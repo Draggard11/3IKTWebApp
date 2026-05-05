@@ -4,7 +4,7 @@ import GetBlogs from "./GetBlogs";
 import { postComment } from "../services/comment";
 import "../styles/MakeComment.css";
 
-export default function MakeComment() {
+export default function MakeComment({refreshKey} : {refreshKey: number}) {
   const [text, setText] = useState<string>();
   const [stars, setStars] = useState<number>(1);
 

@@ -3,11 +3,11 @@ import type { Blog } from "./ShowBlogs";
 import { BlogCard } from "./ShowBlogs";
 import '../styles/GetBlogs.css';
 
-import mockBlogs from './MockBlogs.json';
-import { fetchBlog } from "../services/blogs";
+//import mockBlogs from './MockBlogs.json';
+import { fetchBlogs } from "../services/blogs";
 
-function GetBlogs() {
-  let allBlogs: Blog[] = mockBlogs;
+function GetBlogs({refreshKey} : {refreshKey: number}) {
+  //let allBlogs: Blog[] = mockBlogs;
 
   const blogCounterSteps = 10;
 
@@ -22,7 +22,7 @@ function GetBlogs() {
       setLoading(true);
       setError(null);
       try {
-        const blogs = await fetchBlog(pageNumber);
+        const blogs = await fetchBlogs(pageNumber, blogCounterSteps);
         setCurrentBlogs(blogs);
 
         setTotalBlogs(blogs.length * pageNumber + blogCounterSteps);
@@ -33,7 +33,7 @@ function GetBlogs() {
       }
     }
     loadBlogs();
-  }, [pageNumber]);
+  }, [pageNumber, refreshKey]);
 
   const [disableNextBtn, setDisableNextBtn] = useState<boolean>(false);
   const [disableLastBtn, setDisableLastBtn] = useState<boolean>(true);
@@ -42,7 +42,7 @@ function GetBlogs() {
     if (loading) return <p>Loading blogs...</p>;
     if (error) return <p>Error: {error}</p>;
     return currentBlogs.map((blog) => (
-      <BlogCard key={blog.id} blog={blog} />
+      <BlogCard refreshKey={refreshKey} key={blog.id} blog={blog} />
     ));
   }
 
@@ -68,11 +68,11 @@ function GetBlogs() {
 
   return (
     <div className="blogs-container">
-      <p className="showing-n-blogs">{currentBlogs.length === 1 ? 'Showing 1 blog' : `Showing ${currentBlogs.length} blog`}</p>
+      <p className="showing-n-blogs">{currentBlogs.length === 1 ? 'Showing 1 blog' : `Showing ${currentBlogs.length} blogs`}</p>
       <div className="blogs">
         {ShowBlogs()}
       </div>
-      <p style={{ marginBottom: 8 }}>Page {pageNumber} / {currentBlogs.length}</p>
+      <p style={{ marginBottom: 8 }}>Page {pageNumber} / {Number(currentBlogs) / pageNumber}</p>
       <div className="switch-page-container">
         <button className="switch-page" disabled={disableLastBtn} onClick={() => LastPage()}>{'<'} Last page</button>
         <button className="switch-page" disabled={disableNextBtn} onClick={() => NextPage()}>Next page {'>'}</button>
