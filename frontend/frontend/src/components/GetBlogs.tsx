@@ -9,7 +9,7 @@ import { fetchBlogs } from "../services/blogs";
 function GetBlogs({refreshKey} : {refreshKey: number}) {
   //let allBlogs: Blog[] = mockBlogs;
 
-  const blogCounterSteps = 10;
+  const blogCounterSteps = 5;
 
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [currentBlogs, setCurrentBlogs] = useState<Blog[]>([]);

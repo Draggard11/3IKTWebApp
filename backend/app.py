@@ -75,7 +75,7 @@ def user_lookup_callback(_jwt_header, jwt_data):
 def getBlogs():
     try:
         page = int(request.args.get("page", 1))
-        limit = int(request.args.get("limit", 10))
+        limit = int(request.args.get("limit", 5))
 
         offset = (page - 1) * limit  # ✅ FIXED
 
