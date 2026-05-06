@@ -4,7 +4,7 @@ import GetBlogs from "./GetBlogs";
 import { postComment } from "../services/comment";
 import "../styles/MakeComment.css";
 
-export default function MakeComment({refreshKey} : {refreshKey: number}) {
+export default function MakeComment({ id, refreshKey }: { id: number, refreshKey: number }) {
   const [text, setText] = useState<string>();
   const [stars, setStars] = useState<number>(1);
 
@@ -15,13 +15,12 @@ export default function MakeComment({refreshKey} : {refreshKey: number}) {
       return;
     }
     alert(
-      `Text: ${text}\n
-            Stars: ${stars === undefined ? "No rating given" : stars}`,
+      `Text: ${text}\nStars: ${stars === undefined ? "No rating given" : stars}`,
     );
     // get feedback from backend and report to user
 
     // refresh page
-    postComment(text, stars);
+    postComment(id, text, stars);
   }
   return (
     <div className="make-comment-container">

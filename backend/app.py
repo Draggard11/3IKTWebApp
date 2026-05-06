@@ -107,7 +107,6 @@ def getBlog(id):
         return jsonify({"error": "Blog not found"}), 404
     return jsonify(blog.toDict())
 
-
 @app.route("/api/blog", methods=["POST"])
 @jwt_required()
 def postBlog():

@@ -46,8 +46,8 @@ export function BlogCard({ refreshKey, blog }: { refreshKey: number, blog: Blog 
             </div>
           ))}
         </div>
-        {!username ? (
-          <MakeComment refreshKey={refreshKey} />
+        {username ? (
+          <MakeComment id={blog.id} refreshKey={refreshKey} />
         ) : (
           <div
             style={{
@@ -66,7 +66,7 @@ export function BlogCard({ refreshKey, blog }: { refreshKey: number, blog: Blog 
 
   return (
     <div
-      style={{width: 500}}
+      style={{ width: 500 }}
       className="blog-card-container"
     >
       <div className="blog-title-and-text-container">

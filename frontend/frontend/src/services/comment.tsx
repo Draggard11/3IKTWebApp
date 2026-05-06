@@ -11,13 +11,14 @@ export function getCookie(name: string): string {
 }
 
 export async function postComment(
+  id: number,
   text: string,
-  stars: number,
+  stars: number
 ): Promise<Response> {
   const csrfToken = getCookie("csrf_access_token");
 
   try {
-    const response = await fetch("http://127.0.0.1:5000/api/blog/1/comment", {
+    const response = await fetch(`http://127.0.0.1:5000/api/blog/${id}/comment`, {
       method: "POST",
       headers: {
         "content-type": "application/json",

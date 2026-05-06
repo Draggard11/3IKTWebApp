@@ -2,8 +2,8 @@
 import { createContext, useContext, useState, useEffect } from "react";
 
 // UserContext.tsx
-const UserContext = createContext<{ username: string; refreshUser: () => void }>({
-  username: "anonymous",
+const UserContext = createContext<{ username: string | null; refreshUser: () => void }>({
+  username: null,
   refreshUser: () => {},
 });
 
