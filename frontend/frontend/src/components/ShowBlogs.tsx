@@ -17,7 +17,7 @@ export interface Blog {
 export interface Comment {
   commenter: string;
   text: string;
-  stars: number;
+  stars: number | null;
 }
 
 export function BlogCard({ refreshKey, blog }: { refreshKey: number, blog: Blog }) {
@@ -26,10 +26,10 @@ export function BlogCard({ refreshKey, blog }: { refreshKey: number, blog: Blog 
 
   const { username } = useUsername();
 
-  const Comments = () => {
+  function Comments() {
     return (
       <div className="comments-container">
-        <div className="comment-section">
+        <div className={blog.comments.length === 0 ? '' : 'comment-section'}>
           {blog.comments.map((comment) => (
             <div
               className="comments-row"
@@ -38,7 +38,10 @@ export function BlogCard({ refreshKey, blog }: { refreshKey: number, blog: Blog 
               <div className="comments-row-header">
                 <h4>{comment.commenter}</h4>
                 <span className="comments-row-stars">
-                  {"★ ".repeat(comment.stars)}
+                  {comment.stars != null ?
+                    "★ ".repeat(comment.stars)
+                    : 'No rating'
+                  }
                 </span>
               </div>
               <div className="seperator" />
@@ -101,7 +104,12 @@ export function BlogCard({ refreshKey, blog }: { refreshKey: number, blog: Blog 
             {showComments ? "Hide comments" : "Show comments"}
           </button>
         </p>
-        {showComments ? Comments() : ""}
+        {showComments ?
+          <>
+            <div style={{ margin: 12 }} />
+            <Comments />
+          </> : <></>
+        }
       </div>
     </div>
   );
