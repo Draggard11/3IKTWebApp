@@ -66,6 +66,7 @@ function App() {
         <MainContent />
       </BrowserRouter>
     </UserProvider>
+    </UserProvider>
   );
 }
 export default App;
