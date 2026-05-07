@@ -8,13 +8,13 @@ const UserContext = createContext<{ username: string | null; refreshUser: () => 
 });
 
 export function UserProvider({ children }: { children: React.ReactNode }) {
-  const [username, setUsername] = useState("anonymous");
+  const [username, setUsername] = useState<string | null>(null);
 
   const refreshUser = () => {
     fetch("http://127.0.0.1:5000/api/user", { credentials: "include" })
-      .then(res => res.ok ? res.json() : { username: "anonymous" })
+      .then(res => res.ok ? res.json() : { username: null })
       .then(data => setUsername(data.username))
-      .catch(() => setUsername("anonymous"));
+      .catch(() => setUsername(null));
   };
 
   useEffect(() => { refreshUser(); }, []);

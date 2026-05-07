@@ -27,7 +27,7 @@ function MainContent() {
   return (
     <>
       <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', backgroundColor: '#99d199', padding: 24 }}>
-        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: username.username === 'anonymous' ? 'flex-start' : 'center' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: username.username ? 'center' : 'flex-start' }}>
           <div className="container">
             <img src={blogLogo} alt="Website logo" width={175} />
             <div style={{ margin: 12 }} />
@@ -39,7 +39,7 @@ function MainContent() {
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
             {/* ✅ This will now work because it's inside the Provider */}
 
-            {username.username !== 'anonymous' ?
+            {username.username ?
               <button onClick={() => setShowBlog(!showBlog)}>{showBlog ? 'Hide create blog post' : 'Create blog post'}</button> : ''
             }
           </div>

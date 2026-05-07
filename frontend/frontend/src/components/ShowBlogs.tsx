@@ -17,7 +17,7 @@ export interface Blog {
 export interface Comment {
   commenter: string;
   text: string;
-  stars: number | null;
+  stars: number;
 }
 
 export function BlogCard({ refreshKey, blog }: { refreshKey: number, blog: Blog }) {
@@ -38,10 +38,7 @@ export function BlogCard({ refreshKey, blog }: { refreshKey: number, blog: Blog 
               <div className="comments-row-header">
                 <h4>{comment.commenter}</h4>
                 <span className="comments-row-stars">
-                  {comment.stars != null ?
-                    "★ ".repeat(comment.stars)
-                    : 'No rating'
-                  }
+                  {"★ ".repeat(comment.stars)}
                 </span>
               </div>
               <div className="seperator" />
