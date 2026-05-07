@@ -69,10 +69,15 @@ export function BlogCard({ refreshKey, blog }: { refreshKey: number, blog: Blog 
       style={{ width: 500 }}
       className="blog-card-container"
     >
+      <div>
+        <h4 style={{fontSize: 16, marginBottom: 16}}>| By {blog.madeBy}</h4>
+      </div>
       <div className="blog-title-and-text-container">
+        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
         <h2 key={`title-${blog.title}`} className="blog-title">
-          {blog.title}
+         {blog.title}
         </h2>
+        </div>
         <div key={`container-${blog.id}`} className="blog-text-container">
           <p key={`text-${blog.id}`} className="blog-text">
             {!canShowMoreText && blog.text.length > 50

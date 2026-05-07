@@ -6,16 +6,19 @@ import { useState } from 'react';
 
 function Login() {
   const [login, setLogin] = useState<boolean>(true);
+  const [errorMsg, setErrorMsg] = useState<string>();
   const { refreshUser } = useUsername(); // ✅ called at top level of component
   const navigate = useNavigate();
 
   async function sign(formData: any) {
+
+    setErrorMsg('');
+
     const username = formData.get("username");
     const password = formData.get("password");
 
     if (!username || !password) {
-      alert("please enter a valid username and password");
-      alert("please enter a valid username and password");
+      setErrorMsg('Please enter a valid username and password.')
       return;
     }
 
@@ -23,9 +26,9 @@ function Login() {
       loginUser(username, password).then(() => {
         refreshUser(); // ✅ update username in navbar after login
         navigate('/');
-        alert(`Welcome back, ${username}`);
+        alert(`Welcome, ${username}`);
       }, (reason) => {
-        alert(`Failed login, ${reason}`);
+        setErrorMsg(`Failed login: ${reason}`);
       });
     } else {
       registerUser(username, password).then(() => {
@@ -44,22 +47,18 @@ function Login() {
 
   return (
     <div id="container">
-      <h1 id='heading'>Đăng nhập</h1>
-      <button id='account' onClick={() => setLogin(!login)}>
+      <div id="login-or-register">
+      <form action={sign} style={{display: 'flex', flexDirection: 'column', gap: 12}}>
+        <input className='loginInputs' type='text' name="username" placeholder='Username' />
+        <input className='loginInputs' type='password' name="password" placeholder='Password'/>
+        <button id='loginOrRegisterBtn' type="submit">{login ? 'Login' : 'Register'}</button>
+      </form>
+      <p style={{fontSize: 14, color: 'red'}}>{errorMsg}</p>
+      </div>
+      <div style={{margin: 8}} />
+       <button id='account' onClick={() => setLogin(!login)}>
         {!login ? 'Already have an account? Sign in' : `Don't have an account? Sign up`}
       </button>
-      <form action={sign} id="login-or-register">
-        <label>Username: </label>
-        <input type='text' name="username" />
-        <br /><br />
-        <label>Password: </label>
-        <input type='password' name="password" />
-        <br /><br />
-        <label>Last time traveled to Vietnam: </label>
-        <input type='datetime-local' name="traveledToVietnam" />
-        <br /><br />
-        <button type="submit">{login ? 'Login' : 'Register'}</button>
-      </form>
     </div>
   );
 }

@@ -21,6 +21,8 @@
 }
 
 .blog-title-and-text-container {
+    display: flex;
+    flex-direction: column;
     background-color: whitesmoke;
     padding: 12px;
     border-style: solid;
