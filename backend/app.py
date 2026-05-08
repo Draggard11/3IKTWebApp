@@ -197,12 +197,6 @@ def logout():
         return jsonify({"error" : "Logging out did not work"}), 
     return response, 200
 
-
-@jwt_required
-def make_blog_post(user, title, text):  # Does when you click create blog post button
-    pass
-
-
 @app.route("/api/blog/<int:id>/comment", methods=["POST"])
 @jwt_required()
 def make_comment(id):  # Does when you click create comment button
