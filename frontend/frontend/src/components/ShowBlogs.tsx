@@ -28,7 +28,7 @@ export function BlogCard({ refreshKey, blog }: { refreshKey: number, blog: Blog 
 
   function Comments() {
     return (
-      <div className="comments-container">
+      <div style={{display: 'flex', gap: 4}}>
         <div className={blog.comments.length === 0 ? '' : 'comment-section'}>
           {blog.comments.map((comment) => (
             <div
@@ -65,8 +65,9 @@ export function BlogCard({ refreshKey, blog }: { refreshKey: number, blog: Blog 
   };
 
   return (
+    <div style={{display: 'flex', flexDirection: 'row'}}>
     <div
-      style={{ width: 500 }}
+      style={{ width: '32vw' }}
       className="blog-card-container"
     >
       <div>
@@ -106,13 +107,15 @@ export function BlogCard({ refreshKey, blog }: { refreshKey: number, blog: Blog 
             {showComments ? "Hide comments" : "Show comments"}
           </button>
         </p>
-        {showComments ?
-          <>
-            <div style={{ margin: 12 }} />
-            <Comments />
-          </> : <></>
-        }
       </div>
+    </div>
+    {showComments ?
+      <div style={{display: 'flex'}}>
+        <div style={{margin: 8}} />
+        <Comments />
+      </div>
+      : <></>  
+    }
     </div>
   );
 }

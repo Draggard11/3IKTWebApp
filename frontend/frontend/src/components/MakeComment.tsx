@@ -1,12 +1,10 @@
-import { useEffect, useState } from "react";
-import type { Comment } from "./ShowBlogs";
-import GetBlogs from "./GetBlogs";
+import { useState } from "react";
 import { postComment } from "../services/comment";
 import "../styles/MakeComment.css";
 
 export default function MakeComment({ id, refreshKey }: { id: number, refreshKey: number }) {
   const [text, setText] = useState<string>();
-  const [stars, setStars] = useState<number>(1);
+  const [stars, setStars] = useState<number>(0);
 
   function handleSubmit() {
     // first handle request
@@ -32,13 +30,16 @@ export default function MakeComment({ id, refreshKey }: { id: number, refreshKey
           onChange={(e) => setText(e.target.value)}
         />
         <br />
-        <input
-          className="comment-range-stars"
-          type="range"
-          min={1}
-          max={5}
-          onChange={(e) => setStars(Number(e.target.value))}
-        />
+        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+          <input
+            className="comment-range-stars"
+            type="range"
+            defaultValue={0}
+            min={0}
+            max={5}
+            onChange={(e) => setStars(Number(e.target.value))}
+          /><p>{stars}</p>
+        </div>
         <input className="comment-submit" type="submit" value="Send" />
       </form>
     </div>
