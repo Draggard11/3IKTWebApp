@@ -73,7 +73,7 @@ class User(db.Model):  # Bob
         blog = Blog(self)
         if not blog.post(title, text, []):
             return None
-        db.session.add(blog)       # ✅ put it in the session first
+        db.session.add(blog)  # ✅ put it in the session first
         self.blogs.append(blog)
         return blog
 
@@ -118,7 +118,7 @@ class User(db.Model):  # Bob
         """
         comment = Comment(self, blog)
         if comment.post(text, stars):
-            db.session.add(comment)    # ✅ add here too
+            db.session.add(comment)  # ✅ add here too
             self.comments.append(comment)
             blog.addComment(comment)
             return comment
@@ -406,7 +406,7 @@ class Comment(db.Model):
 
     # region private methods
     def __checkComment(self, text: str, stars: int) -> bool:
-        if not text or not stars:
+        if not text or stars is None:
             return False
         if not self.__checkStars(stars):
             return False

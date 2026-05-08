@@ -17,7 +17,7 @@ def test_post_1():
     for i in [1,2,3,4,5]:
         assert comment.post("...", i)
     assert not comment.post("...", -1)
-    assert not comment.post("...", 0)
+    assert comment.post("A", 0)
     assert not comment.post("...", 6)
 
     # check for comment text upper and lower bound

@@ -4,18 +4,32 @@ import unittest
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from flask import Flask
 
 class test_domain(unittest.TestCase):
 
-    engine = create_engine('sqlite:///:memory:')
-    Session = sessionmaker(bind=engine)
-    session = Session()
-
     def setUp(self):
-        db.metadata.create_all(self.engine)
+            # create app and configure in-memory DB
+            self.app = Flask(__name__)
+            self.app.config.update({
+                'TESTING': True,
+                'SQLALCHEMY_DATABASE_URI': 'sqlite:///:memory:',
+                'SQLALCHEMY_TRACK_MODIFICATIONS': False,
+            })
+    
+            # initialize DB with this app and push context
+            db.init_app(self.app)
+            self.app_context = self.app.app_context()
+            self.app_context.push()
+    
+            # create tables and get session
+            db.create_all()
+            self.session = db.session
     
     def tearDown(self):
-        db.metadata.drop_all(self.engine)
+        db.session.remove()
+        db.drop_all()
+        self.app_context.pop()
     
     # Should test user functionality and scenarios
     def test_user_make_blog_post(self): # user functionality
