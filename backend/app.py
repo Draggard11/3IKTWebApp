@@ -21,7 +21,7 @@ from sqlalchemy.orm import joinedload
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
-CORS(app, origins=["http://localhost:5173"], supports_credentials=True)
+CORS(app, supports_credentials=True)
 # configure the SQLite database, relative to the app instance folder
 app.config["JWT_SECRET_KEY"] = "super-secret"  # Change this!
 app.config["JWT_COOKIE_CSRF_PROTECT"] = False
@@ -51,7 +51,8 @@ with app.app_context():
     if not db.session.query(User).filter_by(username="bob").first():
         user = User("bob", bcrypt.generate_password_hash("pass123").decode("utf-8"))
         blog = user.makeBlogPost(
-            "My First Blog", "Khi một người đàn ông uống cà phê sau khi con ếch thấy nước Phần Lan, đừng hỏi người nông dân để ngồi ở giữa những nhà của mình."
+            "My First Blog",
+            "Khi một người đàn ông uống cà phê sau khi con ếch thấy nước Phần Lan, đừng hỏi người nông dân để ngồi ở giữa những nhà của mình.",
         )
         comment = user.makeComment("My first comment", 5, blog)
         db.session.add(user)
@@ -79,13 +80,7 @@ def getBlogs():
 
         offset = (page - 1) * limit  # ✅ FIXED
 
-        blogs = (
-            Blog.query
-            .order_by(Blog.id.desc())
-            .offset(offset)
-            .limit(limit)
-            .all()
-        )
+        blogs = Blog.query.order_by(Blog.id.desc()).offset(offset).limit(limit).all()
 
         return jsonify([blog.toDict() for blog in blogs])  # ✅ serialize properly
 
@@ -107,6 +102,7 @@ def getBlog(id):
         return jsonify({"error": "Blog not found"}), 404
     return jsonify(blog.toDict())
 
+
 @app.route("/api/blog", methods=["POST"])
 @jwt_required()
 def postBlog():
@@ -125,6 +121,7 @@ def postBlog():
     db.session.add(blog)
     db.session.commit()
     return jsonify(blog.toDict()), 200
+
 
 # https://flask-sqlalchemy.readthedocs.io/en/stable/quickstart/
 
@@ -194,8 +191,9 @@ def logout():
     try:
         unset_jwt_cookies(response)
     except ValueError:
-        return jsonify({"error" : "Logging out did not work"}), 
+        return (jsonify({"error": "Logging out did not work"}),)
     return response, 200
+
 
 @app.route("/api/blog/<int:id>/comment", methods=["POST"])
 @jwt_required()
@@ -234,7 +232,7 @@ def __checkPassword(password: str, hashed_password: str) -> bool:
 
 
 def main():
-    app.run()
+    app.run(host="0.0.0.0", port=5000)
 
 
 if __name__ == "__main__":
