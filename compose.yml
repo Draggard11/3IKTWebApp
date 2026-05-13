@@ -1,0 +1,25 @@
+services:
+  backend:
+    build:
+      context: backend
+    restart: always
+    ports:
+      - 5000:5000
+    networks:
+      - react-flask
+  frontend:
+    build:
+      context: frontend
+    ports:
+      - 5173:5173
+    volumes:
+      - ./frontend/src:/code/src
+      - /project/node_modules
+    networks:
+      - react-flask
+    depends_on:
+      - backend
+    expose:
+      - 5173
+networks:
+  react-flask: {}

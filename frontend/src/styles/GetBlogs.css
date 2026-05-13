@@ -1,0 +1,40 @@
+:root {
+    font-family: 'Monocraft';
+}
+
+body {
+    margin: 0;
+}
+
+.showing-n-blogs {
+    margin: 12px 12px;
+    align-self: center;
+    font-size: 18px;
+}
+
+.blogs-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: fit-content;
+    /*background-color: aqua;*/
+}
+
+.blogs {
+    display: flex;
+    flex-direction: column;
+    margin-right: 12px;
+    margin-left: 12px;
+}
+
+.switch-page-container {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 12px;
+    gap: 16px;
+}
+
+.switch-page {
+    
+}

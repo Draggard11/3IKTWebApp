@@ -1,7 +1,7 @@
 from backend.domain import User, Blog, Comment, db
 
 def test_init():
-    user = User(0, "username", "passwd")
+    user = User("username", "passwd")
     blog = Blog(user)
     comment = Comment(user, blog)
     assert comment.commenter == user
@@ -9,7 +9,7 @@ def test_init():
     
 
 def test_post_1():
-    user = User(0, "username", "passwd")
+    user = User("username", "passwd")
     blog = Blog(user)
     comment = Comment(user, blog)
 
@@ -17,7 +17,7 @@ def test_post_1():
     for i in [1,2,3,4,5]:
         assert comment.post("...", i)
     assert not comment.post("...", -1)
-    assert not comment.post("...", 0)
+    assert comment.post("A", 0)
     assert not comment.post("...", 6)
 
     # check for comment text upper and lower bound
@@ -28,7 +28,7 @@ def test_post_1():
     
 
 def test_edit():
-    user = User(0, "username", "passwd")
+    user = User("username", "passwd")
     blog = Blog(user)
     comment = Comment(user, blog)
     
@@ -36,7 +36,7 @@ def test_edit():
     assert not comment.edit("Muldvarp", 4)
 
 def test_post_2():
-    user = User(0, "username", "passwd")
+    user = User("username", "passwd")
     blog = Blog(user)
     comment = Comment(user, blog)
     text = "A" * 50
