@@ -17,7 +17,9 @@ Hvordan utvikle en blog?
 
 Og legg til egne tanker om hvordan utviklings prosessen har vært om du har noen.
 
+Kompetansemål direkte knyttet og indirekte
 planlegge, utvikle, sette opp og dokumentere integrasjoner mellom ulike systemer og databaser
+(Python skal være nybegynner vennlig og erfaring med react fra før)
 velge og bruke relevante rammeverk og moduler til utvikling
 bruke utviklingsstrategier og samarbeide med andre utviklere
 
